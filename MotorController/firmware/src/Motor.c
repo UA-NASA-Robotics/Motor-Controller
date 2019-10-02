@@ -1,6 +1,7 @@
 #include "Motor.h"
 #include "MotorDefinitions.h"
 #include "CAN.h"
+#include "DataPublishing.h"
 
 void initMotors()
 {
@@ -40,6 +41,8 @@ void initMotors()
 	setMotorVel(&PlowMotor, 0);
 	#endif /*DISABLE_LEFT_MOTOR*/
 	
+    
+    HandleDataPublish(true);
 }
 void MotorsAllStop()
 {

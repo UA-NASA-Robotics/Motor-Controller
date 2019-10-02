@@ -27,6 +27,7 @@ void sendDataCAN( unsigned int whereToSend);
 void ReceiveCANFast( my_can_packet_t *p); // interrupt callback
 bool TransmitCANFast( my_can_packet_t *p); // interrupt callback
 int getCANFastData(uint8_t index);
+void clearCANFastData(uint8_t index);
 #endif /* _CAN_FAST_TRANSFER_H */
 
 /* *****************************************************************************
