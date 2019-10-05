@@ -17,6 +17,7 @@
 #define MY_ADDRESS      6 //THE FILTER WILL BE 0x7fc1 (Address 1)
 
 #define MASTER_ADDRESS 5
+#define ROUTER_ADDRESS 4
 
 #define MACRO_COMMAND_INDEX 1
 #define MACRO_COMMAND_DATA_INDEX 2

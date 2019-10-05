@@ -3,7 +3,7 @@
 #include "Definitions.h"
 #define isINITbit   0
 
-
+void HandleDataPublish();
 
 bool isMotorsInicialized = false;
 
@@ -13,12 +13,13 @@ void isDataRequested()
     if(result != 0xffff && result == 0x0101)
     {
         HandleDataPublish();
+        clearCANFastData(10);
     }
 }
 
 void HandleDataPublish()
 {
-    ToSendCAN(0x00,isMotorsInicialized);
+    ToSendCAN(0x0A,1);
     sendDataCAN(ROUTER_ADDRESS);
 }
 

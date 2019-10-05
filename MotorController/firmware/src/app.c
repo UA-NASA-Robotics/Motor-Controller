@@ -59,6 +59,12 @@ void APP_Initialize ( void )
     initCANISRs(); 
     initCANFT();
     DRV_CAN0_Open();
+    
+//    while(1)
+//    {
+//        //ReceiveDataCAN();
+//        isDataRequested();
+//    }
     initMotors();
     MotorsAllStop();
     
@@ -75,30 +81,7 @@ void APP_Initialize ( void )
     //zeroBucketArm();
     zeroActuator();
     
-    //testPlowingFunction();
-    //diggingMacro();
-    //dumpingMacro();
-    
-    
-    
-    //driveDistance(50,2000);
-    
-    //moveActuatorToCounts(-500,1000);
-    
-    //dumpingMacro();
-    
-    //testBucketMotor();
-    //testBucketActuator();
-    //testMotorControlIntelligently();
-    //testMotorDigitalInputs();
-    //moveBucketArmToHomeFromDig();
-    //testDiggingFunction();
-    //testMotorDistanceCommand();
-    //testMotorDistanceVariedSpeedsCommand();
-    //setMotorVel(&PlowMotor,-500);
-    //testAnalogFeedbackPlowMotor();
-    //testPlowMovement();
-    
+
     //CALL THIS AFTER ZEROING STUFF
     initMacroCommunications();
 //    
@@ -138,6 +121,8 @@ void APP_Tasks ( void )
         }
         case APP_STATE_RECEIVE_COMS:
         {
+            
+            
             appData.state = APP_STATE_AWAITING_RESPONSE;
             break;
         }
@@ -154,19 +139,8 @@ void APP_Tasks ( void )
                 MasterFT.ReceivedData[9] = 0;
                 processMacro(performMacro,macroData);
             }
-//            if(pinState(&NaviPin1))
-//            {
-//                LED2 ^= 1;
-//            }
-//            if(pinState(&NaviPin2))
-//            {
-//                LED3 ^= 1;
-//            }
-//            delay(500);
-//            togglePinState(&NaviPin1);
-//            togglePinState(&NaviPin2);
-//            LED1 ^= 1;
-//            LED4 ^= 1;
+            isDataRequested();
+
             if(timerDone(&sec))
             {
                 
