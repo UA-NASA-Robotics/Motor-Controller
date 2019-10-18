@@ -54,7 +54,7 @@
         <itemPath>../src/fullDiggingRoutine.h</itemPath>
         <itemPath>../src/helperFunctions.h</itemPath>
         <itemPath>../src/macroManagement.h</itemPath>
-        <itemPath>../../../../MasterControler/NaviController/firmware/src/Comunications.h</itemPath>
+        <itemPath>../src/DataPublishing.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f1" displayName="framework" projectFiles="true">
         <logicalFolder name="f1" displayName="driver" projectFiles="true">
@@ -195,7 +195,7 @@
         <itemPath>../src/PID.c</itemPath>
         <itemPath>../src/testingFunctions.c</itemPath>
         <itemPath>../src/changeNotification.c</itemPath>
-        <itemPath>../../../../MasterControler/NaviController/firmware/src/Comunications.c</itemPath>
+        <itemPath>../src/DataPublishing.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f1" displayName="framework" projectFiles="true">
         <logicalFolder name="f1" displayName="driver" projectFiles="true">
@@ -281,7 +281,7 @@
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
         <property key="extra-include-directories"
-                  value="../src;../src/system_config/default;../src/default;../../../../../framework;../src/system_config/default/framework"/>
+                  value="../src;../src/system_config/default;../src/default;../src/system_config/default/framework;../../../../../framework"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>

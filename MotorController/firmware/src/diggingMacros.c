@@ -7,7 +7,6 @@
 #include "PID.h"
 #include "Motor.h"
 #include "macroManagement.h"
-#include "Communications.h"
 #include "Definitions.h"
 #include "CANFastTransfer.h"
 

@@ -251,13 +251,13 @@
       <Template dnOrder="20">
         <Name dnOrder="0">drv_can_static.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app/system_config/default/framework/driver/can/src</Path>
-        <Checksum dnOrder="2">E66701AB325452316E7AA9A8CF66EFEA</Checksum>
+        <Checksum dnOrder="2">28036DC998C58782B047EB7B57449DA3</Checksum>
       </Template>
       <Template dnOrder="21">
         <Name dnOrder="0">system_interrupt.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app/system_config/default</Path>
         <Checksum dnOrder="2">89ADBA39A654FFAB28CA76FFAEF294F8</Checksum>
-        <ProjectFileChecksum dnOrder="3">E25B474A6906DDBA64FEC617A21AA6A5</ProjectFileChecksum>
+        <ProjectFileChecksum dnOrder="3">DB20238BE0125AE943B83121168DAA8F</ProjectFileChecksum>
       </Template>
       <Template dnOrder="22">
         <Name dnOrder="0">sys_clk_pic32mz.c</Name>
@@ -267,11 +267,11 @@
     </Templates>
     <CompilerItems dnOrder="2">
       <C32 dnOrder="0">
-        <Include dnOrder="0" value="C:\microchip\harmony\v2_05_01\apps\A_MotorController\MotorController\firmware\src"/>
-        <Include dnOrder="1" value="C:\microchip\harmony\v2_05_01\apps\A_MotorController\MotorController\firmware\src\system_config\default"/>
-        <Include dnOrder="2" value="C:\microchip\harmony\v2_05_01\apps\A_MotorController\MotorController\firmware\src\default"/>
+        <Include dnOrder="0" value="C:\microchip\harmony\v2_05_01\apps\Motor-Controller\MotorController\firmware\src"/>
+        <Include dnOrder="1" value="C:\microchip\harmony\v2_05_01\apps\Motor-Controller\MotorController\firmware\src\system_config\default"/>
+        <Include dnOrder="2" value="C:\microchip\harmony\v2_05_01\apps\Motor-Controller\MotorController\firmware\src\default"/>
         <Include dnOrder="3" value="C:\microchip\harmony\v2_05_01\framework"/>
-        <Include dnOrder="4" value="C:\microchip\harmony\v2_05_01\apps\A_MotorController\MotorController\firmware\src\system_config\default\framework"/>
+        <Include dnOrder="4" value="C:\microchip\harmony\v2_05_01\apps\Motor-Controller\MotorController\firmware\src\system_config\default\framework"/>
       </C32>
     </CompilerItems>
     <Libraries dnOrder="3">

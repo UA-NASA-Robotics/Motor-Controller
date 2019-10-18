@@ -14,7 +14,6 @@
 #include "diggingMacros.h"
 #include "macroManagement.h"
 #include "testingFunctions.h"
-#include "Communications.h"
 // *****************************************************************************
 // *****************************************************************************
 // Section: Variable Declaration

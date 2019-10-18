@@ -14,12 +14,11 @@
 #define LED3 LATEbits.LATE7
 #define LED4 LATGbits.LATG6
 
-#define MY_ADDRESS      6 //THE FILTER WILL BE 0x7fc1 (Address 1)
+
+
+#define MY_ADDRESS     6 //THE CAN FILTER WILL BE 0x7fc1 (Address 1)
 
 #define MASTER_ADDRESS 5
-
-#define MACRO_COMMAND_INDEX 1
-#define MACRO_COMMAND_DATA_INDEX 2
 
 #define UART_MACRO_RESPONCE
 

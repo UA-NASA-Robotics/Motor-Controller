@@ -54,7 +54,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVOCES, OR ANY CLAIMS BY THIRD PARTIES
 
 
 static CAN_TX_MSG_BUFFER  *drv_Message0;
-static CAN_TX_MSG_BUFFER __attribute__((coherent, aligned(16))) can_message_buffer0[4*2*16];
+static CAN_TX_MSG_BUFFER __attribute__((coherent, aligned(16))) can_message_buffer0[5*2*16];
 
 
 // *****************************************************************************
@@ -101,12 +101,20 @@ void DRV_CAN0_Initialize(void)
     PLIB_CAN_ChannelForReceiveSet(CAN_ID_1, CAN_CHANNEL3, 32, CAN_RX_FULL_RECEIVE);
     PLIB_CAN_FilterToChannelLink(CAN_ID_1, CAN_FILTER1, CAN_FILTER_MASK1, CAN_CHANNEL3);
     PLIB_CAN_ChannelEventEnable(CAN_ID_1, CAN_CHANNEL3, CAN_RX_CHANNEL_NOT_EMPTY);
+    /* Configure CAN_ID_1 Channel for CAN_RX_FULL_RECEIVE operation. Allocate 32 message buffer, and assign low medium priority for transmissions. */
+    PLIB_CAN_ChannelForReceiveSet(CAN_ID_1, CAN_CHANNEL4, 32, CAN_RX_FULL_RECEIVE);
+    PLIB_CAN_FilterToChannelLink(CAN_ID_1, CAN_FILTER2, CAN_FILTER_MASK2, CAN_CHANNEL4);
+    PLIB_CAN_ChannelEventEnable(CAN_ID_1, CAN_CHANNEL4, CAN_RX_CHANNEL_NOT_EMPTY);
     PLIB_CAN_FilterConfigure(CAN_ID_1, CAN_FILTER0, 0x5F0, CAN_SID);
     PLIB_CAN_FilterEnable(CAN_ID_1, CAN_FILTER0);
     PLIB_CAN_FilterConfigure(CAN_ID_1, CAN_FILTER1, 0x187, CAN_SID);
     PLIB_CAN_FilterEnable(CAN_ID_1, CAN_FILTER1);
+    PLIB_CAN_FilterConfigure(CAN_ID_1, CAN_FILTER2, 0x7C0, CAN_SID);
+    PLIB_CAN_FilterEnable(CAN_ID_1, CAN_FILTER2);
 
     PLIB_CAN_FilterMaskConfigure(CAN_ID_1, CAN_FILTER_MASK0, 0x7F0, CAN_SID, CAN_FILTER_MASK_IDE_TYPE);
+    PLIB_CAN_FilterMaskConfigure(CAN_ID_1, CAN_FILTER_MASK1, 0x0, CAN_SID, CAN_FILTER_MASK_IDE_TYPE);
+    PLIB_CAN_FilterMaskConfigure(CAN_ID_1, CAN_FILTER_MASK2, 0xFE0, CAN_SID, CAN_FILTER_MASK_IDE_TYPE);
 
     /* Switch the CAN module to Normal mode. Wait until the switch is complete */
     PLIB_CAN_OperationModeSelect(CAN_ID_1, CAN_NORMAL_MODE);
