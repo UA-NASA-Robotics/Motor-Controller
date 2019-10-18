@@ -11,43 +11,41 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+typedef enum {
+    Velocity = 0,
+    Position,
+    Current
 
+} MotorMode;
 
+typedef struct {
+    int Pos;
+    int Neg;
+    int Home;
+} LimitSwitch_t;
 
-typedef enum
-{
-	Velocity=0,
-	Position
-	
-}MotorMode;
-
-typedef struct{
-	int Pos;
-	int Neg;
-	int Home;
-}LimitSwitch_t;
-
-typedef struct
-{
-	//Can Address
-	char 			ID;
-	char 			Status;
-	char 			MOB;
-	int 			MAX_RPM;
-	int 			MAX_CURRENT;
-	unsigned long	ACCEL;
-	bool			isBrushless;
-	LimitSwitch_t   LimitSwitch;
-    long            Position;
-    int16_t         Analog0;
-    int16_t         Analog1;
-    uint8_t         DigitalInputs;
-    uint8_t         DigitalOutputs;
-    bool            PositionReached;
-    bool            FreshDigitals;
-    bool            FreshPosition;
-    int16_t            errorPresent;
-}Motor_t;
+typedef struct {
+    //Can Address
+    char ID;
+    char Status;
+    char MOB;
+    int MAX_RPM;
+    int MAX_CURRENT;
+    int16_t CURRENT;
+    unsigned long ACCEL;
+    bool isBrushless;
+    LimitSwitch_t LimitSwitch;
+    long Position;
+    int16_t Analog0;
+    int16_t Analog1;
+    uint8_t DigitalInputs;
+    uint8_t DigitalOutputs;
+    bool PositionReached;
+    bool FreshDigitals;
+    bool FreashAnalog;
+    bool FreshPosition;
+    int16_t errorPresent;
+} Motor_t;
 
 //WARNING!! 
 //WARNING!! 
@@ -63,23 +61,42 @@ typedef struct
    '.          .'
      '-......-'
  * */
-Motor_t RightMotor,LeftMotor, BucketActuator,ArmMotor,PlowMotor;
+Motor_t RightMotor, LeftMotor, DrumMotor, ArmMotor, PlowMotor;
 
 //#define DISABLE_MOTOR_SYSTEMS
 //#define DISABLE_LEFT_MOTOR
 //#define DISABLE_RIGHT_MOTOR
 //#define DISABLE_ARM_MOTOR
 //#define DISABLE_BUCKET_MOTOR
-//#define DISABLE_PLOW_MOTOR
+#define DISABLE_PLOW_MOTOR
 
+
+//safety constants for motor controllers
+//strictly speaking the motor controllers should
+//self protect, but better safe than sorry.
+#define MAXRPM		 3500 //3080 is safe value printed on motors, can probably push this up to 4000 without worry if needed.
+#define ACCEL_CONST 10000000 //in rev/min^2, value should be between 100k and 10k *this value will probably have to be changed under load.
+//2147483647
+#define ACCEL_CONST_BRUSH 1000000 //in rev/min^2, value should be between 100k and 10k *this value will probably have to be changed under load.
+
+//maximum current allowed through BG65x25
+#define MAXCURRENTBG65 8000  //seting current limit max which is actually 4A.
+#define MANUAL_MIN_SPEED 30
+//from msb to lsb, LeftMotor, RightMotor, ConveyorMotor, BucketMotor
+//these are the bit positions for the respective motor's error bit in MOTORSTATUS error byte
+#define  LEFTMOTOR_STATUS			7
+#define  RIGHTMOTOR_STATUS			6
+#define  ARMMOTOR_STATUS			5
+#define  BUCKETMOTOR_STATUS			4
+#define  PLOWMOTOR_STATUS			3
 
 
 #define CAN_PACKET_SIZE 8
 #define RECEIVE_MASK 0x7ff
 
-#define ARMMOTORID 0x7F
+#define ARMMOTORID 0x7C
 #define ARMMOTOR_MOB 3
-#define MAXCURRENTARM MAXCURRENTBG65	//this isn't the bg65 but the 75 and the current rating should be reviewed 
+#define MAXCURRENTARM 5000	//this isn't the bg65 but the 75 and the current rating should be reviewed 
 
 #define ARM_DUMP_DIGITAL  1
 #define ARM_DIG_DIGITAL   3
@@ -91,9 +108,9 @@ Motor_t RightMotor,LeftMotor, BucketActuator,ArmMotor,PlowMotor;
 #define LEFTMOTORID 0x7E
 #define LEFTMOTOR_MOB 0
 
-#define ACTUATORMOTORID 0x7C
-#define ACTUATORMOTOR_MOB 2
-#define MAXCURRENTBUCKET 5000 
+#define DRUMMOTORID 0x7F
+#define DRUMMOTOR_MOB 2
+#define MAXCURRENTDRUM MAXCURRENTBG65 
 
 #define ACTUATOR_DUMP_DIGITAL 1
 #define ACTUATOR_DIG_DIGITAL  2
@@ -103,25 +120,6 @@ Motor_t RightMotor,LeftMotor, BucketActuator,ArmMotor,PlowMotor;
 #define MAXCURRENTPLOW 3500
 
 
-
-//safety constants for motor controllers
-//strictly speaking the motor controllers should
-//self protect, but better safe than sorry.
-#define MAXRPM		 5000 //3080 is safe value printed on motors, can probably push this up to 4000 without worry if needed.
-#define ACCEL_CONST 10000000 //in rev/min^2, value should be between 100k and 10k *this value will probably have to be changed under load.
-                  //2147483647
-#define ACCEL_CONST_BRUSH 1000000 //in rev/min^2, value should be between 100k and 10k *this value will probably have to be changed under load.
-
-//maximum current allowed through BG65x25
-#define MAXCURRENTBG65 15000  //seting current limit to 10A, max is actually 20A.
-#define MANUAL_MIN_SPEED 30
-//from msb to lsb, LeftMotor, RightMotor, ConveyorMotor, BucketMotor
-//these are the bit positions for the respective motor's error bit in MOTORSTATUS error byte
-#define  LEFTMOTOR_STATUS			7
-#define  RIGHTMOTOR_STATUS			6
-#define  ARMMOTOR_STATUS			5
-#define  BUCKETMOTOR_STATUS			4
-#define  PLOWMOTOR_STATUS			3
 
 #define Motor_Buffer_Size			4
 
@@ -139,10 +137,11 @@ Motor_t RightMotor,LeftMotor, BucketActuator,ArmMotor,PlowMotor;
 #define  MOTOR_POLARITY_bg75        0x3911, 0x00, 0x00
 #define  SET_FEEDBACK_ENCODER       0x3350, 0x00, 2410 //2410 for encoder
 #define  SET_FEEDBACK_EMF           0x3350, 0x00, 274 //2410 for encoder
+#define  SET_FEEDBACK_AN0           0x3350, 0x00, 256  //Feedback through the analogue input 0  (DC-motors only)
 #define  SET_FEEDBACK_HALL          0x3350, 0x00, 2378 //2378 for hall
 #define  SET_SVEL_FEEDBACK_ENCODER  0x3550, 0x00, 2410 //2410 for encoder
 #define  SET_SVEL_FEEDBACK_HALL     0x3550, 0x00, 2378 //2378 for hall
-#define  SET_FEEDBACK_RESOLUTION    0x3962, 0x00, 500
+#define  SET_FEEDBACK_RESOLUTION    0x3962, 0x00, 4000
 #define  SET_FEEDBACK_RESOLUTION_BG75 0x3962, 0x00, 4096
 #define  CURRENT_LIMIT_POS          0x3221, 0//, MAXCURRENTBG65
 #define  CURRENT_LIMIT_NEG          0x3223, 0//, MAXCURRENTBG65
@@ -174,6 +173,11 @@ Motor_t RightMotor,LeftMotor, BucketActuator,ArmMotor,PlowMotor;
 #define  POSITION_WINDOW            0x373A, 0x00, 1000
 #define  POSITION_ERROR_WINDOW      0x3732, 0x00, 0xFFFFFFFF
 #define  RESET_POSITION             0x3762, 0x00, 0x00
+
+
+#define  MODE_CURR                  0x3003, 0x00, 0x2
+#define  DESIRED_Current            0x3200, 0x0
+
 
 #define  MOTOR_COUNTS               0x3791, 0x00
 
@@ -207,10 +211,10 @@ Motor_t RightMotor,LeftMotor, BucketActuator,ArmMotor,PlowMotor;
 #define  MOTOR_DIGITAL_INPUT_REQUEST    0x3120, 0x00, 0x00
 //Motor Request Reached
 #define  MOTOR_POSITION_REACHED_REQUEST 0x3002, 0x00, 0x00
-
 //Motor Request Error
 #define MOTOR_ERROR_REQUEST             0x3001, 0x00, 0x00
-
+//Motor Current Usage
+#define MOTOR_CURRENT_USAGE             0x3262, 0x00, 0x00
 
 
 //DEFINES FOR HOW TO SORT DATA RETURNING FROM THE CAN BUS
@@ -223,6 +227,7 @@ Motor_t RightMotor,LeftMotor, BucketActuator,ArmMotor,PlowMotor;
 #define DIGITAL_INPUT_REQUESTED         6
 #define POSITION_REACHED_REQUESTED      7
 #define ERROR_REQUESTED                 8
+#define CURRENT_USAGE                   9
 
 
 //motor status tracking

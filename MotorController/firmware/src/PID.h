@@ -18,6 +18,7 @@ typedef struct
     float _kp, _ki, _kd;
     float _dt;
     float _output;
+    float _lastOutput;
     float _error,_prevError,_dError;
     int _now, _past;
     float _derivative, _integral;

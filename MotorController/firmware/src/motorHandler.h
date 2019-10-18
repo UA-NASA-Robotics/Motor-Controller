@@ -21,6 +21,11 @@ void ReEstablishComms(Motor_t* motor);
 //*******************************************************
 //------------------------Setters------------------------
 //*******************************************************
+
+
+void setMotorEncoderResolution(Motor_t *motor, uint16_t res);
+void setMotorDeseleration(Motor_t *motor);
+
 void clearMotorErrors(Motor_t * motor);
 void setMotorDigitalOutput(Motor_t * motor, uint8_t digitalOutput, bool outputState);
 
@@ -31,6 +36,8 @@ void setMotorPos(Motor_t *motor, int pos);
 void setMotorPosNoSafetyComms(Motor_t *motor, int pos);
 
 void setMotorVel(Motor_t *motor, int Vel);
+
+void setMotorCurrent(Motor_t* motor, int Curr);
 
 void setMotorCounts(Motor_t* motor, long counts);
 void setMotorCountsNoSafetyComms(Motor_t *motor, long counts);
@@ -44,7 +51,7 @@ void storeMotorAnalog0(Motor_t * motor, int16_t analog0);
 void storeMotorAnalog1(Motor_t * motor, int16_t analog1);
 
 void storeMotorDigitalInputs(Motor_t * motor, uint8_t digitalIn);
-
+void storeMotorCurrent(Motor_t* motor, int16_t cur);
 void storeMotorError(Motor_t * motor, int16_t err);
 void resetMotorCounts(Motor_t * motor);
 //*******************************************************

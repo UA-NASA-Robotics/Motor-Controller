@@ -75,11 +75,11 @@ void DRV_CAN0_Initialize(void)
     PLIB_CAN_PhaseSegment2LengthFreelyProgrammableEnable(CAN_ID_1);
 
     //Set the Baud rate to 500 kbps
-    PLIB_CAN_PropagationTimeSegmentSet(CAN_ID_1, 1-1);
-    PLIB_CAN_PhaseSegment1LengthSet(CAN_ID_1, 3-1);
-    PLIB_CAN_PhaseSegment2LengthSet(CAN_ID_1, 3-1);
+    PLIB_CAN_PropagationTimeSegmentSet(CAN_ID_1, 8-1);
+    PLIB_CAN_PhaseSegment1LengthSet(CAN_ID_1, 8-1);
+    PLIB_CAN_PhaseSegment2LengthSet(CAN_ID_1, 8-1);
     PLIB_CAN_SyncJumpWidthSet(CAN_ID_1, 1-1);
-    PLIB_CAN_BaudRatePrescaleSet(CAN_ID_1, 9); // set to 1 higher then ECAN tool
+    PLIB_CAN_BaudRatePrescaleSet(CAN_ID_1, 0); // set to 1 higher then ECAN tool
 
 
     /* Assign the buffer area to the CAN module.

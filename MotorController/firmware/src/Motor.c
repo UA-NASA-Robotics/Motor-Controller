@@ -1,7 +1,6 @@
 #include "Motor.h"
 #include "MotorDefinitions.h"
 #include "CAN.h"
-#include "DataPublishing.h"
 
 void initMotors()
 {
@@ -24,15 +23,21 @@ void initMotors()
 	#endif /*DISABLE_ARM_MOTOR*/
 	
 	#ifndef DISABLE_ARM_MOTOR
-	InitMotor_BG75(&ArmMotor, ARMMOTORID, ARMMOTOR_STATUS, ARMMOTOR_MOB, MAXRPM, MAXCURRENTARM, (LimitSwitch_t){LIM_D0L,LIM_D2L,LIM_D1L});
-	setMotorControlMode(&ArmMotor, Velocity,0);
-	setMotorVel(&ArmMotor, 0);
+	InitMotor(&ArmMotor, ARMMOTORID, ARMMOTOR_STATUS, ARMMOTOR_MOB, MAXRPM, MAXCURRENTARM,(LimitSwitch_t){LIM_D0H,LIM_D1H},false);
+	setMotorControlMode(&ArmMotor, Current,0);
+    setMotorVel(&ArmMotor, 0);
+	setMotorCurrent(&ArmMotor,0);
+    
+    
+    //setMotorCurrent(&ArmMotor, 2500);
 	#endif /*DISABLE_LEFT_MOTOR*/
 	
 	#ifndef DISABLE_BUCKET_MOTOR
-	InitMotor(&BucketActuator, ACTUATORMOTORID, BUCKETMOTOR_STATUS, ACTUATORMOTOR_MOB, MAXRPM, MAXCURRENTBUCKET,(LimitSwitch_t){LIM_D0L,LIM_D1L},false);
-	setMotorControlMode(&BucketActuator, Velocity,0);
-	setMotorVel(&BucketActuator, 0);
+	InitMotor(&DrumMotor, DRUMMOTORID, BUCKETMOTOR_STATUS, DRUMMOTOR_MOB, MAXRPM, MAXCURRENTDRUM,(LimitSwitch_t){0,0},true);
+    
+	setMotorControlMode(&DrumMotor, Velocity,0);
+    setMotorDeseleration(&DrumMotor);
+	setMotorVel(&DrumMotor, 0);
 	#endif /*DISABLE_LEFT_MOTOR*/
 	
 	#ifndef DISABLE_PLOW_MOTOR
@@ -41,8 +46,6 @@ void initMotors()
 	setMotorVel(&PlowMotor, 0);
 	#endif /*DISABLE_LEFT_MOTOR*/
 	
-    
-    HandleDataPublish(true);
 }
 void MotorsAllStop()
 {
@@ -53,11 +56,13 @@ void MotorsAllStop()
 	setMotorVel(&LeftMotor, 0);
 
 	#ifndef DISABLE_BUCKET_MOTOR
-	setMotorVel(&BucketActuator,0);
+	setMotorVel(&DrumMotor,0);
 	#endif
 	
 	#ifndef DISABLE_ARM_MOTOR
-	setMotorVel(&ArmMotor, 0);
+    setMotorVel(&ArmMotor, 0);
+    setMotorCurrent(&ArmMotor, 0);
+	//setMotorVel(&ArmMotor, 0);
 	#endif
 	
 	#endif
@@ -84,10 +89,12 @@ void requestMotorData(Motor_t * motor, int dataRequested)
             requestMotorPacketWithResponse(motor->ID,SSI_ENCODER_POSITION_REQUEST       ,ENCODER_POSITION_REQUESTED);          
             break;   
         case ANALOG_0_REQUESTED:
-            requestMotorPacketWithResponse(motor->ID,MOTOR_ANALOG_0_INPUT_REQUEST       ,ANALOG_0_REQUESTED);    
+            requestMotorPacketWithResponse(motor->ID,MOTOR_ANALOG_0_INPUT_REQUEST       ,ANALOG_0_REQUESTED);
+            motor->FreashAnalog = false;
             break;
         case ANALOG_1_REQUESTED:
-            requestMotorPacketWithResponse(motor->ID,MOTOR_ANALOG_1_INPUT_REQUEST       ,ANALOG_1_REQUESTED);    
+            requestMotorPacketWithResponse(motor->ID,MOTOR_ANALOG_1_INPUT_REQUEST       ,ANALOG_1_REQUESTED);  
+            motor->FreashAnalog = false;
             break;
         case DIGITAL_INPUT_REQUESTED:
             requestMotorPacketWithResponse(motor->ID,MOTOR_DIGITAL_INPUT_REQUEST        ,DIGITAL_INPUT_REQUESTED);    
@@ -97,6 +104,9 @@ void requestMotorData(Motor_t * motor, int dataRequested)
             break;
         case ERROR_REQUESTED:
             requestMotorPacketWithResponse(motor->ID,MOTOR_ERROR_REQUEST     ,ERROR_REQUESTED); 
+            break;
+        case CURRENT_USAGE:
+            requestMotorPacketWithResponse(motor->ID,MOTOR_CURRENT_USAGE     ,CURRENT_USAGE); 
             break;
             
     }

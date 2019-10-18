@@ -69,32 +69,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 // *****************************************************************************
 
-
- 
-void __ISR(_I2C1_MASTER_VECTOR, ipl1AUTO) _IntHandlerDrvI2CMasterInstance0(void)
-{
-    DRV_I2C_Tasks(sysObj.drvI2C0);
-}
-
-
-void __ISR(_I2C1_BUS_VECTOR, ipl1AUTO) _IntHandlerDrvI2CErrorInstance0(void)
-{
-    SYS_ASSERT(false, "I2C Driver Instance 0 Error");
-}
-
-     
-   
-
- 
- 
- 
-
- 
-
-
-
-
-  
 void __ISR(_UART2_TX_VECTOR, ipl5AUTO) _IntHandlerDrvUsartTransmitInstance0(void)
 {
     DRV_USART_TasksTransmit(sysObj.drvUsart0);
@@ -107,7 +81,7 @@ void __ISR(_UART2_FAULT_VECTOR, ipl5AUTO) _IntHandlerDrvUsartErrorInstance0(void
 {
     DRV_USART_TasksError(sysObj.drvUsart0);
 }
- 
+
  
 
  
@@ -115,56 +89,52 @@ void __ISR(_UART4_TX_VECTOR, ipl5AUTO) _IntHandlerDrvUsartTransmitInstance1(void
 {
     DRV_USART_TasksTransmit(sysObj.drvUsart1);
 }
-void __ISR(_UART4_RX_VECTOR, ipl5AUTO) _IntHandlerDrvUsartReceiveInstance1(void)
-{
+
+void __ISR(_UART4_RX_VECTOR, ipl5AUTO) _IntHandlerDrvUsartReceiveInstance1(void) {
     DRV_USART_TasksReceive(sysObj.drvUsart1);
 }
-void __ISR(_UART4_FAULT_VECTOR, ipl5AUTO) _IntHandlerDrvUsartErrorInstance1(void)
-{
+
+void __ISR(_UART4_FAULT_VECTOR, ipl5AUTO) _IntHandlerDrvUsartErrorInstance1(void) {
     DRV_USART_TasksError(sysObj.drvUsart1);
 }
- 
- 
 
- 
 
- 
 
- 
-//
-// 
-//void __ISR(_CHANGE_NOTICE_B_VECTOR, ipl1AUTO) _IntHandlerChangeNotification_PortB(void)
-//{
-//    if(getLoadedState())
-//    {
-//       pinChangeNotified();
-//    }
-//    PORTB;
-//    PLIB_INT_SourceFlagClear(INT_ID_0,INT_SOURCE_CHANGE_NOTICE_B);
-//}
-//void __ISR(_CHANGE_NOTICE_D_VECTOR, ipl1AUTO) _IntHandlerChangeNotification_PortD(void)
-//{
-//    if(getLoadedState())
-//    {
-//       pinChangeNotified();
-//    }
-//    PORTD;
-//    
-//    PLIB_INT_SourceFlagClear(INT_ID_0,INT_SOURCE_CHANGE_NOTICE_D);
-//}
 
- 
 
- 
 
-void __ISR(_TIMER_1_VECTOR, ipl6AUTO) IntHandlerDrvTmrInstance0(void)
-{
-    globalTimerTracker( );
-    PLIB_INT_SourceFlagClear(INT_ID_0,INT_SOURCE_TIMER_1);
+
+
+void __ISR(_CHANGE_NOTICE_B_VECTOR, ipl1AUTO) _IntHandlerChangeNotification_PortB(void) {
+    if (getLoadedState()) {
+        pinChangeNotified();
+    }
+    PORTB;
+    PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_CHANGE_NOTICE_B);
 }
- 
-void __ISR(_CAN1_VECTOR, IPL5AUTO) _IntHandlerDrvCANInstance0(void)
-{
+
+void __ISR(_CHANGE_NOTICE_E_VECTOR, ipl1AUTO) _IntHandlerChangeNotification_PortE(void) {
+    if (getLoadedState()) {
+        pinChangeNotified();
+    }
+    PORTE;
+    PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_CHANGE_NOTICE_E);
+}
+
+void __ISR(_CHANGE_NOTICE_F_VECTOR, ipl1AUTO) _IntHandlerChangeNotification_PortF(void) {
+    if (getLoadedState()) {
+        pinChangeNotified();
+    }
+     PORTF;
+    PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_CHANGE_NOTICE_F);
+}
+
+void __ISR(_TIMER_1_VECTOR, ipl6AUTO) IntHandlerDrvTmrInstance0(void) {
+    globalTimerTracker();
+    PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_TIMER_1);
+}
+
+void __ISR(_CAN1_VECTOR, IPL5AUTO) _IntHandlerDrvCANInstance0(void) {
     CAN_ISR_CALLBACK();
     PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_CAN_1);
 }
@@ -173,4 +143,4 @@ void __ISR(_CAN1_VECTOR, IPL5AUTO) _IntHandlerDrvCANInstance0(void)
 
 /*******************************************************************************
  End of File
-*/
+ */

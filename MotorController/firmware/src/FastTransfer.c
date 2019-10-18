@@ -86,6 +86,15 @@ void CloseFastTransferModule(FastTransfer_t* _this)
     }
 }
 
+bool isFTFlagSet(FastTransfer_t *_this, unsigned char index)
+{
+    return _this->ReceivedDataFlags[index];
+}
+int16_t getFTReceivedData(FastTransfer_t *_this, unsigned char index)
+{
+    _this->ReceivedDataFlags[index] = false;
+    return _this->ReceivedData[index];
+}
 
 void ToSend(FastTransfer_t *_this,short _address, int _data)
 {
@@ -250,7 +259,7 @@ bool receiveData(FastTransfer_t *_this)
                         group.parts[1] = rx_buffer[r + 2];
                         
                         _this->ReceivedData[(rx_buffer[r])] = group.integer;
-                      
+                        _this->ReceivedDataFlags[(rx_buffer[r])] = true;
                         
                     } else
                     {

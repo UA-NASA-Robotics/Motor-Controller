@@ -17,8 +17,9 @@
 
 #ifndef _FULL_DIGGING_ROUTINE_H    /* Guard against multiple inclusion */
 #define _FULL_DIGGING_ROUTINE_H
-
+#include <stdbool.h>
 void fullDiggingRoutine(void);
+
 
 #endif /* _FULL_DIGGING_ROUTINE_H */
 

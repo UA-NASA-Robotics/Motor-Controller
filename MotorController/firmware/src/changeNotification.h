@@ -13,15 +13,15 @@
 
 #define CN_PIN_COUNT 4      //the number of Change notification input pins
 
-#define INPUT_INTURRPT_PIN_0 PORTBbits.RB11         // pin24 - IO4   - From Pin 28 on Gyro
-#define INPUT_INTURRPT_PIN_1 PORTBbits.RB13         // pin28 - IO2   - From pin 23 on Gyro
-#define INPUT_INTURRPT_PIN_2 PORTDbits.RD9          // pin43 - IO8   - From Pin 24 on Navi  //NOT listening
-#define INPUT_INTURRPT_PIN_3 PORTDbits.RD11         // pin45 - IO6   - From Pin 22 on Navi
+#define INPUT_INTURRPT_PIN_0 PORTBbits.RB11         // pin24 - IO11   - From Pin 22 on Gyro
+#define INPUT_INTURRPT_PIN_1 PORTBbits.RB13         // pin28 - IO13   - From pin 23 on Gyro
+#define INPUT_INTURRPT_PIN_2 PORTEbits.RE0          // pin58 - IO7    - From Pin 29 on Navi 
+#define INPUT_INTURRPT_PIN_3 PORTFbits.RF1          // pin57 - IO8    - From Pin 30 on Navi
 
-#define OUTPUT_INTURRPT_PIN_0 PORTBbits.RB10        // pin23 - IO3   - To Pin 27 on Gyro 
-#define OUTPUT_INTURRPT_PIN_1 PORTBbits.RB12        // pin27 - IO1   - To Pin 22 on Gyro
-#define OUTPUT_INTURRPT_PIN_2 LATDbits.LATD10        // pin44 - IO7   - To Pin 23 on Navi //NOT TOGGLEING
-#define OUTPUT_INTURRPT_PIN_3 PORTDbits.RD0         // pin46 - IO5   - To Pin 21 on Navi
+#define OUTPUT_INTURRPT_PIN_0 LATBbits.LATB10        // pin23 - IO3   - To Pin 27 on Gyro 
+#define OUTPUT_INTURRPT_PIN_1 LATBbits.LATB12        // pin27 - IO1   - To Pin 22 on Gyro
+#define OUTPUT_INTURRPT_PIN_2 LATEbits.LATE3         // pin63 - IO5   - To Pin 27 on Navi 
+#define OUTPUT_INTURRPT_PIN_3 LATEbits.LATE2         // pin62 - IO6   - To Pin 28 on Navi
 
 typedef struct{
     unsigned char pinId;    //this should be a number between 0 and 3 that corresponds to the input pin

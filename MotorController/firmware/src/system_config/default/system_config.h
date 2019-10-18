@@ -81,25 +81,25 @@ extern "C" {
 // *****************************************************************************
 /* Clock System Service Configuration Options
 */
-#define SYS_CLK_FREQ                        240000000ul
-#define SYS_CLK_BUS_PERIPHERAL_1            80000000ul
-#define SYS_CLK_BUS_PERIPHERAL_2            80000000ul
-#define SYS_CLK_BUS_PERIPHERAL_3            80000000ul
-#define SYS_CLK_BUS_PERIPHERAL_4            120000000ul
-#define SYS_CLK_BUS_PERIPHERAL_5            80000000ul
-#define SYS_CLK_BUS_PERIPHERAL_7            240000000ul
-#define SYS_CLK_BUS_PERIPHERAL_8            80000000ul
+#define SYS_CLK_FREQ                        200000000ul
+#define SYS_CLK_BUS_PERIPHERAL_1            100000000ul
+#define SYS_CLK_BUS_PERIPHERAL_2            33333333ul
+#define SYS_CLK_BUS_PERIPHERAL_3            40000000ul
+#define SYS_CLK_BUS_PERIPHERAL_4            100000000ul
+#define SYS_CLK_BUS_PERIPHERAL_5            25000000ul
+#define SYS_CLK_BUS_PERIPHERAL_7            200000000ul
+#define SYS_CLK_BUS_PERIPHERAL_8            66666666ul
 #define SYS_CLK_CONFIG_PRIMARY_XTAL         24000000ul
 #define SYS_CLK_CONFIG_SECONDARY_XTAL       32768ul
    
 /*** Ports System Service Configuration ***/
-#define SYS_PORT_B_ANSEL        0x403F
-#define SYS_PORT_B_TRIS         0x69FF
-#define SYS_PORT_B_LAT          0x0200
+#define SYS_PORT_B_ANSEL        0x401F
+#define SYS_PORT_B_TRIS         0x6BDF
+#define SYS_PORT_B_LAT          0x1400
 #define SYS_PORT_B_ODC          0x0000
 #define SYS_PORT_B_CNPU         0x0000
 #define SYS_PORT_B_CNPD         0x0000
-#define SYS_PORT_B_CNEN         0x0000
+#define SYS_PORT_B_CNEN         0x2800
 
 #define SYS_PORT_C_ANSEL        0x9FFF
 #define SYS_PORT_C_TRIS         0xFFFF
@@ -110,7 +110,7 @@ extern "C" {
 #define SYS_PORT_C_CNEN         0x0000
 
 #define SYS_PORT_D_ANSEL        0xF1C0
-#define SYS_PORT_D_TRIS         0xFBFE
+#define SYS_PORT_D_TRIS         0xFFFF
 #define SYS_PORT_D_LAT          0x0000
 #define SYS_PORT_D_ODC          0x0000
 #define SYS_PORT_D_CNPU         0x0000
@@ -118,12 +118,12 @@ extern "C" {
 #define SYS_PORT_D_CNEN         0x0000
 
 #define SYS_PORT_E_ANSEL        0xFF00
-#define SYS_PORT_E_TRIS         0xFF0F
-#define SYS_PORT_E_LAT          0x00F0
+#define SYS_PORT_E_TRIS         0xFF03
+#define SYS_PORT_E_LAT          0x00EC
 #define SYS_PORT_E_ODC          0x0000
 #define SYS_PORT_E_CNPU         0x0000
 #define SYS_PORT_E_CNPD         0x0000
-#define SYS_PORT_E_CNEN         0x0000
+#define SYS_PORT_E_CNEN         0x0001
 
 #define SYS_PORT_F_ANSEL        0xFFC4
 #define SYS_PORT_F_TRIS         0xFFFF
@@ -131,13 +131,13 @@ extern "C" {
 #define SYS_PORT_F_ODC          0x0000
 #define SYS_PORT_F_CNPU         0x0000
 #define SYS_PORT_F_CNPD         0x0000
-#define SYS_PORT_F_CNEN         0x0000
+#define SYS_PORT_F_CNEN         0x0002
 
-#define SYS_PORT_G_ANSEL        0xFE7F
-#define SYS_PORT_G_TRIS         0xFFFF
-#define SYS_PORT_G_LAT          0x0000
+#define SYS_PORT_G_ANSEL        0xFC7F
+#define SYS_PORT_G_TRIS         0xFFBF
+#define SYS_PORT_G_LAT          0x0040
 #define SYS_PORT_G_ODC          0x0000
-#define SYS_PORT_G_CNPU         0x0000
+#define SYS_PORT_G_CNPU         0x0200
 #define SYS_PORT_G_CNPD         0x0000
 #define SYS_PORT_G_CNEN         0x0000
 
@@ -151,43 +151,6 @@ extern "C" {
 // *****************************************************************************
 // *****************************************************************************
 #define DRV_CAN_DRIVER_MODE_STATIC 
-// *****************************************************************************
-/* I2C Driver Configuration Options
-*/
-#define DRV_I2C_INTERRUPT_MODE                    		true
-#define DRV_I2C_CLIENTS_NUMBER                    		1
-#define DRV_I2C_INSTANCES_NUMBER                  		1
-
-#define DRV_I2C_PERIPHERAL_ID_IDX0                		I2C_ID_1
-#define DRV_I2C_OPERATION_MODE_IDX0               		DRV_I2C_MODE_MASTER
-#define DRV_SCL_PORT_IDX0                               PORT_CHANNEL_D
-#define DRV_SCL_PIN_POSITION_IDX0                       PORTS_BIT_POS_10
-#define DRV_SDA_PORT_IDX0                               PORT_CHANNEL_D
-#define DRV_SDA_PIN_POSITION_IDX0                       PORTS_BIT_POS_9
-#define DRV_I2C_BIT_BANG_IDX0                           false
-#define DRV_I2C_STOP_IN_IDLE_IDX0                       false
-#define DRV_I2C_SMBus_SPECIFICATION_IDX0			    false
-#define DRV_I2C_BAUD_RATE_IDX0                    		50000
-#define DRV_I2C_BRG_CLOCK_IDX0	                  		80000000
-#define DRV_I2C_SLEW_RATE_CONTROL_IDX0      			false
-#define DRV_I2C_MASTER_INT_SRC_IDX0               		INT_SOURCE_I2C_1_MASTER
-#define DRV_I2C_SLAVE_INT_SRC_IDX0                		
-#define DRV_I2C_ERR_MZ_INT_SRC_IDX0               		INT_SOURCE_I2C_1_BUS
-#define DRV_I2C_MASTER_INT_VECTOR_IDX0            		INT_VECTOR_I2C1_MASTER
-#define DRV_I2C_MASTER_ISR_VECTOR_IDX0                  _I2C1_MASTER_VECTOR
-#define DRV_I2C_MASTER_INT_PRIORITY_IDX0          		INT_PRIORITY_LEVEL1
-#define DRV_I2C_MASTER_INT_SUB_PRIORITY_IDX0      		INT_SUBPRIORITY_LEVEL0
-#define DRV_I2C_SLAVE_INT_VECTOR_IDX0             		INT_VECTOR_I2C1_SLAVE
-#define DRV_I2C_SLAVE_ISR_VECTOR_IDX0			  	    _I2C1_SLAVE_VECTOR
-#define DRV_I2C_SLAVE_INT_PRIORITY_IDX0           		
-#define DRV_I2C_SLAVE_INT_SUB_PRIORITY_IDX0       		
-#define DRV_I2C_ERR_INT_VECTOR_IDX0               		INT_VECTOR_I2C1_BUS
-#define DRV_I2C_ERR_ISR_VECTOR_IDX0                     _I2C1_BUS_VECTOR
-#define DRV_I2C_ERR_INT_PRIORITY_IDX0             		INT_PRIORITY_LEVEL1
-#define DRV_I2C_ERR_INT_SUB_PRIORITY_IDX0         		INT_SUBPRIORITY_LEVEL0
-#define DRV_I2C_POWER_STATE_IDX0                  		SYS_MODULE_POWER_RUN_FULL
-#define DRV_I2C_INTERRUPT_MODE                    		true
-
 /*** Timer Driver Configuration ***/
 #define DRV_TMR_INTERRUPT_MODE             true
 
@@ -225,7 +188,7 @@ extern "C" {
 #define DRV_USART_INIT_FLAG_AUTO_BAUD_IDX0          false
 #define DRV_USART_INIT_FLAG_STOP_IN_IDLE_IDX0       false
 #define DRV_USART_INIT_FLAGS_IDX0                   0
-#define DRV_USART_BRG_CLOCK_IDX0                    80000000
+#define DRV_USART_BRG_CLOCK_IDX0                    33333333
 #define DRV_USART_BAUD_RATE_IDX0                    115200
 #define DRV_USART_LINE_CNTRL_IDX0                   DRV_USART_LINE_CONTROL_8NONE1
 #define DRV_USART_HANDSHAKE_MODE_IDX0               DRV_USART_HANDSHAKE_NONE
@@ -253,7 +216,7 @@ extern "C" {
 #define DRV_USART_INIT_FLAG_AUTO_BAUD_IDX1          false
 #define DRV_USART_INIT_FLAG_STOP_IN_IDLE_IDX1       false
 #define DRV_USART_INIT_FLAGS_IDX1                   0
-#define DRV_USART_BRG_CLOCK_IDX1                    80000000
+#define DRV_USART_BRG_CLOCK_IDX1                    33333333
 #define DRV_USART_BAUD_RATE_IDX1                    115200
 #define DRV_USART_LINE_CNTRL_IDX1                   DRV_USART_LINE_CONTROL_8NONE1
 #define DRV_USART_HANDSHAKE_MODE_IDX1               DRV_USART_HANDSHAKE_NONE
@@ -290,6 +253,13 @@ extern "C" {
 // *****************************************************************************
 /*** Application Defined Pins ***/
 
+/*** Functions for LimitSwitchOutSig pin ***/
+#define LimitSwitchOutSigToggle() PLIB_PORTS_PinToggle(PORTS_ID_0, PORT_CHANNEL_B, PORTS_BIT_POS_5)
+#define LimitSwitchOutSigOn() PLIB_PORTS_PinSet(PORTS_ID_0, PORT_CHANNEL_B, PORTS_BIT_POS_5)
+#define LimitSwitchOutSigOff() PLIB_PORTS_PinClear(PORTS_ID_0, PORT_CHANNEL_B, PORTS_BIT_POS_5)
+#define LimitSwitchOutSigStateGet() PLIB_PORTS_PinGetLatched(PORTS_ID_0, PORT_CHANNEL_B, PORTS_BIT_POS_5)
+#define LimitSwitchOutSigStateSet(Value) PLIB_PORTS_PinWrite(PORTS_ID_0, PORT_CHANNEL_B, PORTS_BIT_POS_5, Value)
+
 /*** Functions for Output_Gyro_IO3 pin ***/
 #define Output_Gyro_IO3Toggle() PLIB_PORTS_PinToggle(PORTS_ID_0, PORT_CHANNEL_B, PORTS_BIT_POS_10)
 #define Output_Gyro_IO3On() PLIB_PORTS_PinSet(PORTS_ID_0, PORT_CHANNEL_B, PORTS_BIT_POS_10)
@@ -297,26 +267,29 @@ extern "C" {
 #define Output_Gyro_IO3StateGet() PLIB_PORTS_PinGetLatched(PORTS_ID_0, PORT_CHANNEL_B, PORTS_BIT_POS_10)
 #define Output_Gyro_IO3StateSet(Value) PLIB_PORTS_PinWrite(PORTS_ID_0, PORT_CHANNEL_B, PORTS_BIT_POS_10, Value)
 
-/*** Functions for Output_Gyro_IO1 pin ***/
-#define Output_Gyro_IO1Toggle() PLIB_PORTS_PinToggle(PORTS_ID_0, PORT_CHANNEL_B, PORTS_BIT_POS_12)
-#define Output_Gyro_IO1On() PLIB_PORTS_PinSet(PORTS_ID_0, PORT_CHANNEL_B, PORTS_BIT_POS_12)
-#define Output_Gyro_IO1Off() PLIB_PORTS_PinClear(PORTS_ID_0, PORT_CHANNEL_B, PORTS_BIT_POS_12)
-#define Output_Gyro_IO1StateGet() PLIB_PORTS_PinGetLatched(PORTS_ID_0, PORT_CHANNEL_B, PORTS_BIT_POS_12)
-#define Output_Gyro_IO1StateSet(Value) PLIB_PORTS_PinWrite(PORTS_ID_0, PORT_CHANNEL_B, PORTS_BIT_POS_12, Value)
+/*** Functions for Output_Gyro_IO4 pin ***/
+#define Output_Gyro_IO4Toggle() PLIB_PORTS_PinToggle(PORTS_ID_0, PORT_CHANNEL_B, PORTS_BIT_POS_12)
+#define Output_Gyro_IO4On() PLIB_PORTS_PinSet(PORTS_ID_0, PORT_CHANNEL_B, PORTS_BIT_POS_12)
+#define Output_Gyro_IO4Off() PLIB_PORTS_PinClear(PORTS_ID_0, PORT_CHANNEL_B, PORTS_BIT_POS_12)
+#define Output_Gyro_IO4StateGet() PLIB_PORTS_PinGetLatched(PORTS_ID_0, PORT_CHANNEL_B, PORTS_BIT_POS_12)
+#define Output_Gyro_IO4StateSet(Value) PLIB_PORTS_PinWrite(PORTS_ID_0, PORT_CHANNEL_B, PORTS_BIT_POS_12, Value)
 
-/*** Functions for Output_Navi_IO7 pin ***/
-#define Output_Navi_IO7Toggle() PLIB_PORTS_PinToggle(PORTS_ID_0, PORT_CHANNEL_D, PORTS_BIT_POS_10)
-#define Output_Navi_IO7On() PLIB_PORTS_PinSet(PORTS_ID_0, PORT_CHANNEL_D, PORTS_BIT_POS_10)
-#define Output_Navi_IO7Off() PLIB_PORTS_PinClear(PORTS_ID_0, PORT_CHANNEL_D, PORTS_BIT_POS_10)
-#define Output_Navi_IO7StateGet() PLIB_PORTS_PinGetLatched(PORTS_ID_0, PORT_CHANNEL_D, PORTS_BIT_POS_10)
-#define Output_Navi_IO7StateSet(Value) PLIB_PORTS_PinWrite(PORTS_ID_0, PORT_CHANNEL_D, PORTS_BIT_POS_10, Value)
+/*** Functions for Output_Master_IO6 pin ***/
+#define Output_Master_IO6Toggle() PLIB_PORTS_PinToggle(PORTS_ID_0, PORT_CHANNEL_E, PORTS_BIT_POS_2)
+#define Output_Master_IO6On() PLIB_PORTS_PinSet(PORTS_ID_0, PORT_CHANNEL_E, PORTS_BIT_POS_2)
+#define Output_Master_IO6Off() PLIB_PORTS_PinClear(PORTS_ID_0, PORT_CHANNEL_E, PORTS_BIT_POS_2)
+#define Output_Master_IO6StateGet() PLIB_PORTS_PinGetLatched(PORTS_ID_0, PORT_CHANNEL_E, PORTS_BIT_POS_2)
+#define Output_Master_IO6StateSet(Value) PLIB_PORTS_PinWrite(PORTS_ID_0, PORT_CHANNEL_E, PORTS_BIT_POS_2, Value)
 
-/*** Functions for Output_Navi_IO5 pin ***/
-#define Output_Navi_IO5Toggle() PLIB_PORTS_PinToggle(PORTS_ID_0, PORT_CHANNEL_D, PORTS_BIT_POS_0)
-#define Output_Navi_IO5On() PLIB_PORTS_PinSet(PORTS_ID_0, PORT_CHANNEL_D, PORTS_BIT_POS_0)
-#define Output_Navi_IO5Off() PLIB_PORTS_PinClear(PORTS_ID_0, PORT_CHANNEL_D, PORTS_BIT_POS_0)
-#define Output_Navi_IO5StateGet() PLIB_PORTS_PinGetLatched(PORTS_ID_0, PORT_CHANNEL_D, PORTS_BIT_POS_0)
-#define Output_Navi_IO5StateSet(Value) PLIB_PORTS_PinWrite(PORTS_ID_0, PORT_CHANNEL_D, PORTS_BIT_POS_0, Value)
+/*** Functions for Output_Master_IO5 pin ***/
+#define Output_Master_IO5Toggle() PLIB_PORTS_PinToggle(PORTS_ID_0, PORT_CHANNEL_E, PORTS_BIT_POS_3)
+#define Output_Master_IO5On() PLIB_PORTS_PinSet(PORTS_ID_0, PORT_CHANNEL_E, PORTS_BIT_POS_3)
+#define Output_Master_IO5Off() PLIB_PORTS_PinClear(PORTS_ID_0, PORT_CHANNEL_E, PORTS_BIT_POS_3)
+#define Output_Master_IO5StateGet() PLIB_PORTS_PinGetLatched(PORTS_ID_0, PORT_CHANNEL_E, PORTS_BIT_POS_3)
+#define Output_Master_IO5StateSet(Value) PLIB_PORTS_PinWrite(PORTS_ID_0, PORT_CHANNEL_E, PORTS_BIT_POS_3, Value)
+
+/*** Functions for LimitSwtichSignal pin ***/
+#define LimitSwtichSignalStateGet() PLIB_PORTS_PinGet(PORTS_ID_0, PORT_CHANNEL_G, PORTS_BIT_POS_9)
 
 
 /*** Application Instance 0 Configuration ***/

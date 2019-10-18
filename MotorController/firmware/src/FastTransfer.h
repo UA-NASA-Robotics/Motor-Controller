@@ -34,6 +34,7 @@ typedef struct
     int ModuleADDRESS;
     RingBuffer_t *DataBuffer;
     int ReceivedData[20];
+    int ReceivedDataFlags[20];
     bool IsNewData;
     UART_Object_t COMdriver;
     void (*serial_write)( UART_Object_t* , unsigned char);
@@ -72,4 +73,6 @@ void CloseFastTransferModule(FastTransfer_t* _this);
 void ToSend(FastTransfer_t *_this,short _address, int _data);
 bool sendData(FastTransfer_t *_FTobject, unsigned char whereToSend);
 bool receiveData(FastTransfer_t *_this);
+int16_t getFTReceivedData(FastTransfer_t *_this, unsigned char index);
+bool isFTFlagSet(FastTransfer_t *_this, unsigned char index);
 #endif	/* FASTTRANSFER_H */

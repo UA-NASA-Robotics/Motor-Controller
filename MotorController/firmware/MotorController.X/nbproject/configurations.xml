@@ -12,6 +12,7 @@
           <itemPath>../src/PID.h</itemPath>
           <itemPath>../src/fullDumpingRoutine.h</itemPath>
           <itemPath>../src/testingFunctions.h</itemPath>
+          <itemPath>../src/ArcDriveMacro.h</itemPath>
         </logicalFolder>
         <logicalFolder name="f1" displayName="system_config" projectFiles="true">
           <logicalFolder name="f1" displayName="default" projectFiles="true">
@@ -47,32 +48,20 @@
         <itemPath>../src/CANFastTransfer.h</itemPath>
         <itemPath>../src/FastTransfer.h</itemPath>
         <itemPath>../src/actuatorControl.h</itemPath>
-        <itemPath>../src/bucketArmControl.h</itemPath>
         <itemPath>../src/diggingMacros.h</itemPath>
         <itemPath>../src/drivingControl.h</itemPath>
         <itemPath>../src/dumpingMacros.h</itemPath>
         <itemPath>../src/fullDiggingRoutine.h</itemPath>
         <itemPath>../src/helperFunctions.h</itemPath>
         <itemPath>../src/macroManagement.h</itemPath>
-        <itemPath>../src/plowControl.h</itemPath>
-        <itemPath>../src/DataPublishing.h</itemPath>
+        <itemPath>../../../../MasterControler/NaviController/firmware/src/Comunications.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f1" displayName="framework" projectFiles="true">
         <logicalFolder name="f1" displayName="driver" projectFiles="true">
           <logicalFolder name="f1" displayName="can" projectFiles="true">
             <itemPath>../../../../../framework/driver/can/drv_can.h</itemPath>
           </logicalFolder>
-          <logicalFolder name="f2" displayName="i2c" projectFiles="true">
-            <logicalFolder name="f1" displayName="src" projectFiles="true">
-              <itemPath>../../../../../framework/driver/i2c/src/drv_i2c_local.h</itemPath>
-              <itemPath>../../../../../framework/driver/i2c/src/drv_i2c_variant_mapping.h</itemPath>
-            </logicalFolder>
-            <itemPath>../../../../../framework/driver/i2c/drv_i2c.h</itemPath>
-            <itemPath>../../../../../framework/driver/i2c/drv_i2c_device_pic32m.h</itemPath>
-            <itemPath>../../../../../framework/driver/i2c/drv_i2c_compatibility.h</itemPath>
-            <itemPath>../../../../../framework/driver/i2c/drv_i2c_mapping.h</itemPath>
-          </logicalFolder>
-          <logicalFolder name="f3" displayName="tmr" projectFiles="true">
+          <logicalFolder name="f2" displayName="tmr" projectFiles="true">
             <logicalFolder name="f1" displayName="src" projectFiles="true">
               <itemPath>../../../../../framework/driver/tmr/src/drv_tmr_variant_mapping.h</itemPath>
             </logicalFolder>
@@ -81,7 +70,7 @@
             <itemPath>../../../../../framework/driver/tmr/drv_tmr_compatibility.h</itemPath>
             <itemPath>../../../../../framework/driver/tmr/tmr_definitions_pic32m.h</itemPath>
           </logicalFolder>
-          <logicalFolder name="f4" displayName="usart" projectFiles="true">
+          <logicalFolder name="f3" displayName="usart" projectFiles="true">
             <logicalFolder name="f1" displayName="src" projectFiles="true">
               <itemPath>../../../../../framework/driver/usart/src/drv_usart_variant_mapping.h</itemPath>
               <itemPath>../../../../../framework/driver/usart/src/drv_usart_local.h</itemPath>
@@ -142,13 +131,11 @@
         <logicalFolder name="f2" displayName="MotorSystems" projectFiles="true">
           <itemPath>../src/motorHandler.c</itemPath>
           <itemPath>../src/Motor.c</itemPath>
-          <itemPath>../src/bucketArmControl.c</itemPath>
           <itemPath>../src/diggingMacros.c</itemPath>
           <itemPath>../src/dumpingMacros.c</itemPath>
           <itemPath>../src/drivingControl.c</itemPath>
           <itemPath>../src/fullDiggingRoutine.c</itemPath>
-          <itemPath>../src/actuatorControl.c</itemPath>
-          <itemPath>../src/plowControl.c</itemPath>
+          <itemPath>../src/ArcDriveMacro.c</itemPath>
         </logicalFolder>
         <logicalFolder name="f1" displayName="system_config" projectFiles="true">
           <logicalFolder name="f1" displayName="default" projectFiles="true">
@@ -208,18 +195,11 @@
         <itemPath>../src/PID.c</itemPath>
         <itemPath>../src/testingFunctions.c</itemPath>
         <itemPath>../src/changeNotification.c</itemPath>
-        <itemPath>../src/DataPublishing.c</itemPath>
+        <itemPath>../../../../MasterControler/NaviController/firmware/src/Comunications.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f1" displayName="framework" projectFiles="true">
         <logicalFolder name="f1" displayName="driver" projectFiles="true">
-          <logicalFolder name="f1" displayName="i2c" projectFiles="true">
-            <logicalFolder name="f1" displayName="src" projectFiles="true">
-              <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
-                <itemPath>../../../../../framework/driver/i2c/src/dynamic/drv_i2c.c</itemPath>
-              </logicalFolder>
-            </logicalFolder>
-          </logicalFolder>
-          <logicalFolder name="f2" displayName="usart" projectFiles="true">
+          <logicalFolder name="f1" displayName="usart" projectFiles="true">
             <logicalFolder name="f1" displayName="src" projectFiles="true">
               <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
                 <itemPath>../../../../../framework/driver/usart/src/dynamic/drv_usart.c</itemPath>
@@ -249,6 +229,7 @@
     <Elem>..\src</Elem>
     <Elem>..\src\default</Elem>
     <Elem>..\src\system_config\default</Elem>
+    <Elem>../../../../MasterControler/NaviController/firmware/src</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>

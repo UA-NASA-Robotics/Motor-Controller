@@ -8,10 +8,6 @@ void initChangeNotification()
     pinArray[1] = &GyroPin2;
     pinArray[2] = &NaviPin1;
     pinArray[3] = &NaviPin2;
-    TRISDbits.TRISD9 = 1;
-    TRISDbits.TRISD11 = 1;
-    TRISDbits.TRISD10 = 0;
-    TRISDbits.TRISD0 = 0;
     int i;
     for(i = 0; i < CN_PIN_COUNT; i++)
     {

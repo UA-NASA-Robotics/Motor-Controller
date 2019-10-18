@@ -22,6 +22,7 @@
 #include <stdint.h>
 
 bool continueMacro(void);
+void setContinueMacroState(bool state);
 void initMacroCommunications(void);
 void processMacro(uint8_t performMacro, int macroData);
 void updateMacroCommunications(void);

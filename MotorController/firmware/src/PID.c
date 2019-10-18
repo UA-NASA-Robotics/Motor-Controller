@@ -79,7 +79,7 @@ int updateOutput(PID_Struct_t *_this, float sample)
     {
         _this->_derivative = _this->_dError/_this->_dt;
 
-    }
+    } 
 	_this->_integral += _this->_error;  //*_dt;
 	_this->_output=0;
 	if(_this->_kp!=0)
@@ -93,8 +93,8 @@ int updateOutput(PID_Struct_t *_this, float sample)
     if(_this->_ki != 0)
     {
         _this->_output += (_this->_integral * _this->_ki);
-    } 
-
+    }
+    _this->_lastOutput = _this->_output;
     _this->_prevError = _this->_error;
     return _this->_output;
 }

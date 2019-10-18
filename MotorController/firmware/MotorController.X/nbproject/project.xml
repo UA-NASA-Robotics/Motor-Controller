@@ -19,6 +19,7 @@
                 <sourceRootElem>..\src</sourceRootElem>
                 <sourceRootElem>..\src\default</sourceRootElem>
                 <sourceRootElem>..\src\system_config\default</sourceRootElem>
+                <sourceRootElem>../../../../MasterControler/NaviController/firmware/src</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>

@@ -13,7 +13,7 @@
 #include "driver/usart/drv_usart.h"
 #include "bufferHandler.h"
 
-#define UART_Master       DRV_USART_INDEX_0       //Uart2(Silicon instance) | Instance 0 (harmony) | UART2_3TX(tx) UART2_3RX(rx) (board Schematic) | PIN 17(TX) & PIN 18(RX) (Processor)
+#define UART_Master       DRV_USART_INDEX_0       //Uart2(Silicon instance) | Instance 0 (harmony) | UART2_3TX(tx) UART2_3RX(rx) (board Schematic) | PIN 53(TX) & PIN 52(RX) (Processor)
 #define UART_Gyro         DRV_USART_INDEX_1       //Uart4(Silicon instance) | Instance 1 (harmony) | UART1_2RX(tx) UART1_2TX(rx) (board Schematic) | PIN 52(TX) & PIN 53(RX) (Processor)
 #define Uart_3            DRV_USART_INDEX_2       //Uartx(Silicon instance) | Instance 2 (harmony) | <title> (board Schematic) | PIN xx(TX) & PIN xx(RX) (Processor)
 #define Uart_4            DRV_USART_INDEX_3       //Uartx(Silicon instance) | Instance 3 (harmony) | <title> (board Schematic) | PIN xx(TX) & PIN xx(RX) (Processor)

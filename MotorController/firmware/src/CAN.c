@@ -194,8 +194,8 @@ void CAN_ISR_CALLBACK(void)
                         case LEFTMOTORID:
                             storeMotorError(&LeftMotor,dataCombination);                            
                             break;
-                        case ACTUATORMOTORID:
-                            storeMotorError(&BucketActuator,dataCombination);                            
+                        case DRUMMOTORID:
+                            storeMotorError(&DrumMotor,dataCombination);                            
                             break;
                         case ARMMOTORID:
                             storeMotorError(&ArmMotor,dataCombination);                            
@@ -216,8 +216,8 @@ void CAN_ISR_CALLBACK(void)
                         case LEFTMOTORID:
                             storeMotorPosition(&LeftMotor,dataCombination);                            
                             break;
-                        case ACTUATORMOTORID:
-                            storeMotorPosition(&BucketActuator,dataCombination);                            
+                        case DRUMMOTORID:
+                            storeMotorPosition(&DrumMotor,dataCombination);                            
                             break;
                         case ARMMOTORID:
                             storeMotorPosition(&ArmMotor,dataCombination);                            
@@ -238,8 +238,8 @@ void CAN_ISR_CALLBACK(void)
                         case LEFTMOTORID:
                             storeMotorAnalog0(&LeftMotor,(int16_t)dataCombination);                            
                             break;
-                        case ACTUATORMOTORID:
-                            storeMotorAnalog0(&BucketActuator,(int16_t)dataCombination);                            
+                        case DRUMMOTORID:
+                            storeMotorAnalog0(&DrumMotor,(int16_t)dataCombination);                            
                             break;
                         case ARMMOTORID:
                             storeMotorAnalog0(&ArmMotor,(int16_t)dataCombination);                            
@@ -258,8 +258,8 @@ void CAN_ISR_CALLBACK(void)
                         case LEFTMOTORID:
                             storeMotorAnalog1(&LeftMotor,(int16_t)dataCombination);                            
                             break;
-                        case ACTUATORMOTORID:
-                            storeMotorAnalog1(&BucketActuator,(int16_t)dataCombination);                            
+                        case DRUMMOTORID:
+                            storeMotorAnalog1(&DrumMotor,(int16_t)dataCombination);                            
                             break;
                         case ARMMOTORID:
                             storeMotorAnalog1(&ArmMotor,(int16_t)dataCombination);                            
@@ -278,8 +278,8 @@ void CAN_ISR_CALLBACK(void)
                         case LEFTMOTORID:
                             storeMotorDigitalInputs(&LeftMotor,(uint8_t)dataCombination);                            
                             break;
-                        case ACTUATORMOTORID:
-                            storeMotorDigitalInputs(&BucketActuator,(uint8_t)dataCombination);  
+                        case DRUMMOTORID:
+                            storeMotorDigitalInputs(&DrumMotor,(uint8_t)dataCombination);  
                             break;
                         case ARMMOTORID:
                             storeMotorDigitalInputs(&ArmMotor,(uint8_t)dataCombination);  
@@ -304,14 +304,34 @@ void CAN_ISR_CALLBACK(void)
                         case LEFTMOTORID:
                             storeMotorPositionReached(&LeftMotor,returnable);                            
                             break;
-                        case ACTUATORMOTORID:
-                            storeMotorPositionReached(&BucketActuator,returnable);  
+                        case DRUMMOTORID:
+                            storeMotorPositionReached(&DrumMotor,returnable);  
                             break;
                         case ARMMOTORID:
                             storeMotorPositionReached(&ArmMotor,returnable);                          
                             break;
                         case PLOWMOTORID:
                             storeMotorPositionReached(&PlowMotor,returnable);                            
+                            break;
+                    }
+                    break;
+                case CURRENT_USAGE:
+                    switch(comparableAddress)
+                    {
+                        case RIGHTMOTORID:
+                            storeMotorCurrent(&RightMotor,(int16_t)dataCombination);
+                            break;
+                        case LEFTMOTORID:
+                            storeMotorCurrent(&LeftMotor,(int16_t)dataCombination);                            
+                            break;
+                        case DRUMMOTORID:
+                            storeMotorCurrent(&DrumMotor,(int16_t)dataCombination);                            
+                            break;
+                        case ARMMOTORID:
+                            storeMotorCurrent(&ArmMotor,(int16_t)dataCombination);                            
+                            break;
+                        case PLOWMOTORID:
+                            storeMotorCurrent(&PlowMotor,(int16_t)dataCombination);                            
                             break;
                     }
                     break;
