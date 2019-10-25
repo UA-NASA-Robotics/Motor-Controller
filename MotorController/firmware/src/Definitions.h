@@ -14,11 +14,22 @@
 #define LED3 LATEbits.LATE7
 #define LED4 LATGbits.LATG6
 
+typedef enum {
+    CONTROLBOX = 1,
+    POZYX,
+    JUICE_BOARD,
+    ROUTER_CARD,
+    MASTER_CONTROLLER,
+    MOTOR_CONTROLLER,
+    GYRO_CONTROLLER,
+    STRAIN_SENSOR,
+    OPTICAL_FLOW,
+    RASPBERRY_PI,
+    LED_CARD,
+    GLOBAL_ADDRESS = 31
+} Addresses_t;
 
-
-#define MY_ADDRESS     6 //THE CAN FILTER WILL BE 0x7fc1 (Address 1)
-
-#define MASTER_ADDRESS 5
+#define MY_ADDRESS     MOTOR_CONTROLLER //THE CAN FILTER WILL BE 0x7fc1 (Address 1)
 
 #define UART_MACRO_RESPONCE
 

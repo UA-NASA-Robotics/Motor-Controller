@@ -78,8 +78,10 @@ void CAN_ISR_CALLBACK(void) {
     {
         int CHANNEL;
         if (C1FIFOINT3bits.RXNEMPTYIF) {
+            //System Receive
             CHANNEL = CHANNEL_3_CAN;
         } else {
+            //Global Receive
             CHANNEL = CHANNEL_4_CAN;
         }
 

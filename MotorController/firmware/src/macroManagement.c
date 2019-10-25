@@ -150,6 +150,6 @@ void finishMacro(void) {
 
 #else
     ToSend(&MasterFT, 1, 1);
-    sendData(&MasterFT, MASTER_ADDRESS);
+    sendData(&MasterFT, MASTER_CONTROLLER);
 #endif
 }
