@@ -77,19 +77,18 @@ void CAN_ISR_CALLBACK(void) {
     if (C1FIFOINT3bits.RXNEMPTYIF || C1FIFOINT4bits.RXNEMPTYIF) //RBIF
     {
         int CHANNEL;
-        
+        if (C1FIFOINT3bits.RXNEMPTYIF) {
+            //System Receive
+            CHANNEL = CHANNEL_3_CAN;
+        } else {
+            //Global Receive
+            CHANNEL = CHANNEL_4_CAN;
+        }
 
         CAN_RX_MSG_BUFFER * RxMessage;
         /* Get the channel RX status */
 
         CAN_CHANNEL_EVENT ChannelEvent;
-        if (C1FIFOINT3bits.RXNEMPTYIF) {
-            //System Receive
-            CHANNEL = CHANNEL_3_CAN;
-        } else if(C1FIFOINT4bits.RXNEMPTYIF) {
-            //Global Receive
-            CHANNEL = CHANNEL_4_CAN;
-        }
         ChannelEvent = PLIB_CAN_ChannelEventGet(CAN_ID_1, CHANNEL);
 
         /* Check if there is a message available to read. */

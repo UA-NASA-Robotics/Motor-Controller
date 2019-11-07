@@ -251,7 +251,7 @@
       <Template dnOrder="20">
         <Name dnOrder="0">drv_can_static.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app/system_config/default/framework/driver/can/src</Path>
-        <Checksum dnOrder="2">4D467285F8E419E22B4ABA557B97C3F7</Checksum>
+        <Checksum dnOrder="2">28036DC998C58782B047EB7B57449DA3</Checksum>
       </Template>
       <Template dnOrder="21">
         <Name dnOrder="0">system_interrupt.c</Name>

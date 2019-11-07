@@ -25,7 +25,6 @@ timers_t sec, ms100, ms10;
 timers_t bootTimer, ledTime;
 bool isLoaded = false;
 int val;
-
 void APP_Initialize(void) {
     /* Place the App state machine in its initial state. */
     appData.state = APP_STATE_INIT;
@@ -68,12 +67,37 @@ void APP_Initialize(void) {
 
     delay(1000);
 
+    //zeroBucketArm();
+    //zeroActuator();
 
+    //testPlowingFunction();
+    //diggingMacro();
+    //dumpingMacro();
+
+
+
+    //driveDistance(50,2000);
+
+    //moveActuatorToCounts(-500,1000);
+
+    //dumpingMacro();
+
+    //testBucketMotor();
+    //testBucketActuator();
+    //testMotorControlIntelligently();
+    //testMotorDigitalInputs();
+    //moveBucketArmToHomeFromDig();
+    //testDiggingFunction();
+    //testMotorDistanceCommand();
+    //testMotorDistanceVariedSpeedsCommand();
+    //setMotorVel(&PlowMotor,-500);
+    //testAnalogFeedbackPlowMotor();
+    //testPlowMovement();
 
     //CALL THIS AFTER ZEROING STUFF
     initMacroCommunications();
 
-
+    
 }
 
 /******************************************************************************
@@ -102,7 +126,7 @@ void APP_Tasks(void) {
                 //fullDiggingRoutine();
                 //fullDiggingRoutine();
                 //while(1);
-
+               
             }
             break;
         }
@@ -122,18 +146,6 @@ void APP_Tasks(void) {
         {
             int performMacro = false;
             short macroData = 0;
-            if(ReceiveDataCAN(FT_GLOBAL))
-            {
-                getCANFastData(FT_GLOBAL, MASTER_CONTROLLER*5 +1);
-            }
-            if(getNewDataFlagStatus(FT_GLOBAL, MASTER_CONTROLLER*5 +1 ))
-            {
-                LED1 ^=1;
-                LED2 ^=1;
-                LED3 ^=1;
-                LED4 ^=1;
-            }
-            
             if (receiveData(&MasterFT)) {
                 performMacro = MasterFT.ReceivedData[8];
                 macroData = (short) MasterFT.ReceivedData[9];
@@ -141,6 +153,10 @@ void APP_Tasks(void) {
                 MasterFT.ReceivedData[9] = 0;
                 processMacro(performMacro, macroData);
             }
+//            if (timerDone(&TestTimer))
+//                if (setDiggingHeight(3000))
+//                    LED4 ^= 1;
+
             appData.state = APP_STATE_SERVICE_TASKS;
             break;
         }
