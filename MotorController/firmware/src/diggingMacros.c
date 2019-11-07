@@ -173,6 +173,6 @@ bool HeightTolerance(int target, int actualValue) {
 }
 
 int getDrumWeight() {
-    return getCANFastData(DRUM_DATA_INDEX);
+    return 0;
 
 }
