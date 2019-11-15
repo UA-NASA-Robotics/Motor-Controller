@@ -15,25 +15,27 @@ void initGlobalData(GLOBL_dataElement_t _index, int (*getFuncPointer)(void), uns
 
 }
 
-void publishData() {
+bool publishData() {
     int i;
     bool validData = false;
     // Loop through all the elements that we could potentially send
     for (i = 0; i < DATA_ELEMENTS_COUNT; i++) {
         // if an data element hasn't been initialized then the pointer to the data retrieval function will be NULL
         if (dataRetrievalFunc[i] != NULL) {
-            // Making sure we actually have data to send
-            validData = true;
+
             // Make sure the interval that we want to send the data out on has ellapsed
             if (timerDone(&dataPeriodTimer[i])) {
+                // Making sure we actually have data to send
+                validData = true;
                 //Send the data on the can bus
-                ToSendCAN(i+DATA_ELEMENTS_COUNT*MOTOR_CONTROLLER,(dataRetrievalFunc[i])());
+                ToSendCAN(i + DATA_ELEMENTS_COUNT*MOTOR_CONTROLLER, (dataRetrievalFunc[i])());
             }
         }
     }
-    if(validData){
+    if (validData) {
         sendDataCAN(GLOBAL_ADDRESS);
-        LED2 ^=1;
+        LED2 ^= 1;
     }
+    return validData;
 }
 

@@ -35,9 +35,9 @@ extern "C" {
 
     /** \brief: Publishes the data if and only if the timers for the specific data elements has expired
      *
-     * \return: N/A
+     * \return: True if data was published
      */
-    void publishData();
+    bool publishData();
 
 
 

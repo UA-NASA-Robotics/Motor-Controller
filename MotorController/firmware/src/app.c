@@ -111,10 +111,10 @@ void APP_Tasks(void) {
 
         case TRANSMIT_GLOBAL_INFO:
         {
-             if (timerDone(&TestTimer)) {
+             
                publishData();
                 LED1 ^=1;
-            }
+           
             appData.state = APP_STATE_RECEIVE_COMS;
             break;
         }
