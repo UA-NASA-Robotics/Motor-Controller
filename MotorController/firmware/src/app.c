@@ -25,6 +25,7 @@ timers_t sec, ms100, ms10;
 timers_t bootTimer, ledTime;
 bool isLoaded = false;
 int val;
+
 void APP_Initialize(void) {
     /* Place the App state machine in its initial state. */
     appData.state = APP_STATE_INIT;
@@ -51,12 +52,15 @@ void APP_Initialize(void) {
 
     }
 
-    isLoaded = true;
+   
     initCANISRs();
     initCANFT();
     DRV_CAN0_Open();
-    initMotors();
-    MotorsAllStop();
+    isLoaded = true;
+    initGlobalData(Init_Element, getLoadedState, 500);
+
+//    initMotors();
+//    MotorsAllStop();
 
     //    InitUARTModule(&MasterUart,UART_Master);
     //    InitUARTModule(&GyroUart,UART_Gyro);
@@ -67,37 +71,11 @@ void APP_Initialize(void) {
 
     delay(1000);
 
-    //zeroBucketArm();
-    //zeroActuator();
-
-    //testPlowingFunction();
-    //diggingMacro();
-    //dumpingMacro();
-
-
-
-    //driveDistance(50,2000);
-
-    //moveActuatorToCounts(-500,1000);
-
-    //dumpingMacro();
-
-    //testBucketMotor();
-    //testBucketActuator();
-    //testMotorControlIntelligently();
-    //testMotorDigitalInputs();
-    //moveBucketArmToHomeFromDig();
-    //testDiggingFunction();
-    //testMotorDistanceCommand();
-    //testMotorDistanceVariedSpeedsCommand();
-    //setMotorVel(&PlowMotor,-500);
-    //testAnalogFeedbackPlowMotor();
-    //testPlowMovement();
 
     //CALL THIS AFTER ZEROING STUFF
     initMacroCommunications();
 
-    
+
 }
 
 /******************************************************************************
@@ -119,25 +97,30 @@ void APP_Tasks(void) {
             bool appInitialized = true;
 
             if (appInitialized) {
-                setTimerInterval(&TestTimer, 50);
+                setTimerInterval(&TestTimer, 500);
                 appData.state = APP_STATE_AWAITING_RESPONSE;
                 //diggingMacro();
                 //filterMaterials(30);
                 //fullDiggingRoutine();
                 //fullDiggingRoutine();
                 //while(1);
-               
+
             }
             break;
         }
 
-        case APP_STATE_SERVICE_TASKS:
+        case TRANSMIT_GLOBAL_INFO:
         {
+             if (timerDone(&TestTimer)) {
+               publishData();
+                LED1 ^=1;
+            }
             appData.state = APP_STATE_RECEIVE_COMS;
             break;
         }
         case APP_STATE_RECEIVE_COMS:
         {
+            
             appData.state = APP_STATE_AWAITING_RESPONSE;
             break;
         }
@@ -153,11 +136,11 @@ void APP_Tasks(void) {
                 MasterFT.ReceivedData[9] = 0;
                 processMacro(performMacro, macroData);
             }
-//            if (timerDone(&TestTimer))
-//                if (setDiggingHeight(3000))
-//                    LED4 ^= 1;
+            //            if (timerDone(&TestTimer))
+            //                if (setDiggingHeight(3000))
+            //                    LED4 ^= 1;
 
-            appData.state = APP_STATE_SERVICE_TASKS;
+            appData.state = TRANSMIT_GLOBAL_INFO;
             break;
         }
             /* The default state should never be executed. */
@@ -169,8 +152,9 @@ void APP_Tasks(void) {
     }
 }
 
-bool getLoadedState() {
-    return isLoaded;
+int getLoadedState()
+{
+    return (isLoaded ? 0x01 : 0x00);
 }
 
 /*******************************************************************************

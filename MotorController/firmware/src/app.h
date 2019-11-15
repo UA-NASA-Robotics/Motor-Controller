@@ -64,6 +64,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "CANFastTransfer.h"
 #include "changeNotification.h"
 #include "Motor.h"
+#include "DataPublishing.h"
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
@@ -93,7 +94,7 @@ typedef enum
 {
 	/* Application's state machine's initial state. */
 	APP_STATE_INIT=0,
-	APP_STATE_SERVICE_TASKS,
+	TRANSMIT_GLOBAL_INFO,
     APP_STATE_RECEIVE_COMS,
     APP_STATE_AWAITING_RESPONSE
 
@@ -171,7 +172,7 @@ typedef struct
 */
 
 void APP_Initialize ( void );
-bool getLoadedState();
+int getLoadedState();
 
 
 /*******************************************************************************
