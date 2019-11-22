@@ -11,6 +11,7 @@
 #ifdef	__cplusplus
 extern "C" {
 #endif
+#include <stdbool.h>
 
     typedef enum {
         Init_Element = 0,

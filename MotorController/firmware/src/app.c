@@ -136,6 +136,10 @@ void APP_Tasks(void) {
                 MasterFT.ReceivedData[9] = 0;
                 processMacro(performMacro, macroData);
             }
+            if(ReceiveDataCAN(FT_GLOBAL))
+            {
+                
+            }
             //            if (timerDone(&TestTimer))
             //                if (setDiggingHeight(3000))
             //                    LED4 ^= 1;

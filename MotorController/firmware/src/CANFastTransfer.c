@@ -1,70 +1,97 @@
 #include "CANFastTransfer.h"
-
-
-#define BUFFER_SIZE_CAN 200
+#include "CANbufferHandler.h"
+#include "GlobalCAN_IDs.h"
 //0b0111 1111 11xx xxxx (where the x's are your address)
 #define LAST_BOARD_RECEIEVED 0
 
-typedef struct {
-    int buf[BUFFER_SIZE_CAN];
-    int head;
-    int tail;
-    int count;
-} ringBufCAN_t;
 
-void beginCANFast(volatile int * ptr, unsigned int maxSize, unsigned char givenAddress);
+void beginCANFast(volatile int * ptr, volatile bool *flagPtr, unsigned int maxSize, unsigned char givenAddress, FT_type_t _t);
 void buffer_put(ringBufCAN_t *_this, unsigned int towhere, unsigned int towhat);
-void buffer_put_3(ringBufCAN_t *_this, unsigned int towhere, unsigned int towhat, unsigned int val);
-unsigned int buffer_get(ringBufCAN_t* _this);
-unsigned int buffer_peek(ringBufCAN_t* _this);
-void buffer_flush(ringBufCAN_t* _this, const int clearBuffer);
-void wipeBuffer(int*buf, int val, uint16_t numVals);
-unsigned int buffer_modulo_inc(const unsigned int value, const unsigned int modulus);
-unsigned int buffer_GetCount(ringBufCAN_t* _this);
+
+void setNewDataFlag(FT_type_t _t, int index);
 
 ringBufCAN_t transmit_buffer_CAN, send_buffer_CAN_FT, rx_buffer_CAN;
 ringBufCAN_t rx_buffer_CAN_Global;
 
 bool dataReceived = false;
 volatile int * receiveArrayAddressCAN[2];
+volatile bool * receiveArrayAddressCAN_Flag[2];
 unsigned char moduleAddressCAN[2];
 unsigned int MaxIndex[2];
 int receiveArrayCAN[10];
+bool receiveArrayCAN_Flag[10];
+
+int newDataFlag = 0;
+int newDataFlag_Global[2];
 
 int * getReceiveArrayCAN(void) {
     return receiveArrayCAN;
 }
 
 void initCANFT(void) {
-    beginCANFast(receiveArrayCAN, sizeof (receiveArrayCAN), MY_ADDRESS);
+    beginCANFast(receiveArrayCAN, receiveArrayCAN_Flag, sizeof (receiveArrayCAN), MY_ADDRESS,FT_LOCAL);
+    beginCANFast(receiveArrayCAN_Global, GBL_CAN_FT_recievedFlag, sizeof (receiveArrayCAN_Global), GLOBAL_ADDRESS, FT_GLOBAL);
 }
 
-void beginCANFastGlobal(volatile int * ptr, unsigned int maxSize) {
-    receiveArrayAddressCAN[FT_GLOBAL] = ptr;
-    moduleAddressCAN[FT_GLOBAL] = 0x1F;
+void beginCANFast(volatile int * ptr, volatile bool *flagPtr, unsigned int maxSize, unsigned char givenAddress, FT_type_t _t) {
 
-    MaxIndex[FT_GLOBAL] = maxSize;
-    
-    buffer_flush(&rx_buffer_CAN_Global, 0);
+    receiveArrayAddressCAN[_t] = ptr;
+    receiveArrayAddressCAN_Flag[_t] = flagPtr;
+    moduleAddressCAN[_t] = givenAddress;
+    MaxIndex[_t] = maxSize;
 
+    if (_t == FT_GLOBAL) {
+        buffer_flush(&rx_buffer_CAN_Global, 0);
+    } else {
+        buffer_flush(&rx_buffer_CAN, 0);
+        buffer_flush(&send_buffer_CAN_FT, 0);
+        buffer_flush(&transmit_buffer_CAN, 0);
+    }
 }
 
-void beginCANFast(volatile int * ptr, unsigned int maxSize, unsigned char givenAddress) {
-    receiveArrayAddressCAN[FT_LOCAL] = ptr;
-    moduleAddressCAN[FT_LOCAL] = givenAddress;
-    MaxIndex[FT_LOCAL] = maxSize;
-
-    buffer_flush(&rx_buffer_CAN, 0);
-    buffer_flush(&send_buffer_CAN_FT, 0);
-    buffer_flush(&transmit_buffer_CAN, 0);
+void setNewDataFlag(FT_type_t _t, int index) {
+    (receiveArrayAddressCAN_Flag[_t])[index] = 1;
 }
 
-int getCANFastData(uint8_t index) {
-    ReceiveDataCAN(FT_LOCAL);
-    if (index < MaxIndex) {
-        return receiveArrayCAN[index];
+void clearNewDataFlag(FT_type_t _t, int index) {
+    (receiveArrayAddressCAN_Flag[_t])[index] = 0;
+}
+
+bool getNewDataFlagStatus(FT_type_t _t, int index) {
+    if ((receiveArrayAddressCAN_Flag[_t])[index]) {
+        clearNewDataFlag(_t, index);
+        return true;
+    } else {
+        return false;
+    }
+}
+
+int getCANFastData(FT_type_t _t, uint8_t index) {
+    ReceiveDataCAN(_t);
+    if (index < MaxIndex[_t]) {
+
+        return (receiveArrayAddressCAN[_t])[index];
     }
     return 0xFFFF;
+}
+
+void clearCANFastDataValue(int index) {
+
+    receiveArrayCAN[index] = 0;
+}
+
+void clearCANFastDataValueRange(int startIndex, int end) {
+    if (startIndex > end) {
+        int index = startIndex;
+        startIndex = end;
+        end = index;
+    }
+    int i;
+    for (i = startIndex; i <= end; i++) {
+
+        receiveArrayCAN[i] = 0;
+        clearNewDataFlag(FT_LOCAL, i);
+    }
 }
 
 void ReceiveCANFast(my_can_packet_t *p, FT_type_t _t) // interrupt callback
@@ -88,6 +115,7 @@ void ReceiveCANFast(my_can_packet_t *p, FT_type_t _t) // interrupt callback
         } else //else read in one int
         {
             if ((p->messageContents[0] << 8) +(p->messageContents[1]) < MaxIndex[_t]) {
+
                 buffer_put(rx_Buff, (p->messageContents[0] << 8) +(p->messageContents[1]), (p->messageContents[2] << 8) +(p->messageContents[3]));
                 dataReceived = 1;
             }
@@ -109,6 +137,7 @@ int ReceiveDataCAN(FT_type_t _t) {
             for (; i > 0; i = i - 2) {
                 int address = buffer_get(rx_Buff);
                 (receiveArrayAddressCAN[_t])[address] = buffer_get(rx_Buff);
+                setNewDataFlag(_t, address);
             }
             return 1;
         } else {
@@ -157,7 +186,7 @@ bool TransmitCANFast(my_can_packet_t *p) // interrupt callback
                 //addresses don't match and we should just send what is currently in the packet. 
                 p->DLC_Code = 4;
             }
-        }            //if exactly 2 data/index pairs left send with length 9. Receiver
+        }//if exactly 2 data/index pairs left send with length 9. Receiver
             //will read the "wrong" length correctly, but realize this is the last packet.
             //note: still need to check incase two different destinations. 
         else if (buffer_GetCount(&transmit_buffer_CAN) == 6) {
@@ -186,7 +215,7 @@ bool TransmitCANFast(my_can_packet_t *p) // interrupt callback
                 p->DLC_Code = 4;
             }
 
-        }            //if only 1 data/index pair receiver will know it is the last packet.
+        }//if only 1 data/index pair receiver will know it is the last packet.
         else if (buffer_GetCount(&transmit_buffer_CAN) == 3) {
             unsigned int address = buffer_get(&transmit_buffer_CAN);
             p->canAddress = (address << 6) + MY_ADDRESS; //not passed through messages will have wrong sender address
@@ -197,8 +226,7 @@ bool TransmitCANFast(my_can_packet_t *p) // interrupt callback
                 p->messageContents[2 * i] = (temp >> 8);
                 p->messageContents[2 * i + 1] = temp;
             }
-        }
-        else {
+        } else {
             //error, missing dest/index/value set, previous packets could be very corrupt
             //TransmitSetMissMatch++;
             buffer_flush(&transmit_buffer_CAN, 1);
@@ -207,11 +235,13 @@ bool TransmitCANFast(my_can_packet_t *p) // interrupt callback
         return true;
     } else {
         C1FIFOINT2bits.TXEMPTYIE = 0;
+
         return false;
     }
 }
 
 void ToSendCAN(unsigned int where, unsigned int what) {
+
     buffer_put(&send_buffer_CAN_FT, where, what);
 }
 
@@ -226,97 +256,13 @@ void sendDataCAN(unsigned int whereToSend) {
         buffer_put_3(&transmit_buffer_CAN, whereToSend, index, value);
     }
     if (C1FIFOINT2bits.TXEMPTYIE == 0) {
+
         C1FIFOINT2bits.TXEMPTYIE = 1;
     }
 }
 
-void buffer_put(ringBufCAN_t *_this, unsigned int towhere, unsigned int towhat) {
 
 
-    if (_this->count < (BUFFER_SIZE_CAN - 3)) {
-        _this->buf[_this->head] = towhere;
-        _this->head = buffer_modulo_inc(_this->head, BUFFER_SIZE_CAN);
-        ++_this->count;
-        _this->buf[_this->head] = towhat;
-        _this->head = buffer_modulo_inc(_this->head, BUFFER_SIZE_CAN);
-        ++_this->count;
-    }
-
+int GlobalAddressInturpret(int index) {
+    return MY_ADDRESS * GLOBAL_SYSTEM_DATA_SIZE + index;
 }
-
-void buffer_put_3(ringBufCAN_t *_this, unsigned int towhere, unsigned int towhat, unsigned int val) {
-    if (_this->count < (BUFFER_SIZE_CAN - 3)) {
-        _this->buf[_this->head] = towhere;
-        _this->head = buffer_modulo_inc(_this->head, BUFFER_SIZE_CAN);
-        ++_this->count;
-        _this->buf[_this->head] = towhat;
-        _this->head = buffer_modulo_inc(_this->head, BUFFER_SIZE_CAN);
-        ++_this->count;
-        _this->buf[_this->head] = val;
-        _this->head = buffer_modulo_inc(_this->head, BUFFER_SIZE_CAN);
-        ++_this->count;
-    }
-
-}
-
-
-//pulls info out of the send buffer in a first in first out fashion
-
-unsigned int buffer_get(ringBufCAN_t* _this) {
-    unsigned int c;
-    if (_this->count > 0) {
-        c = _this->buf[_this->tail];
-        _this->tail = buffer_modulo_inc(_this->tail, BUFFER_SIZE_CAN);
-        --_this->count;
-    } else {
-        c = 0;
-    }
-    return (c);
-}
-
-unsigned int buffer_peek(ringBufCAN_t* _this) {
-    unsigned int c;
-    if (_this->count > 0) {
-        c = _this->buf[_this->tail];
-    }
-    else {
-        c = 0;
-    }
-    return (c);
-}
-
-
-//flushes the send buffer to get it ready for new data
-
-void buffer_flush(ringBufCAN_t* _this, const int clearBuffer) {
-    _this->count = 0;
-    _this->head = 0;
-    _this->tail = 0;
-    if (clearBuffer) {
-        wipeBuffer(_this->buf, 0, sizeof (_this->buf));
-    }
-}
-
-void wipeBuffer(int*buf, int val, uint16_t numVals) {
-    int i = 0;
-    for (i = 0; i < numVals; i++) {
-        buf[i] = val;
-    }
-}
-
-// increments counters for the buffer functions
-
-unsigned int buffer_modulo_inc(const unsigned int value, const unsigned int modulus) {
-    unsigned int my_value = value + 1;
-    if (my_value >= modulus) {
-        my_value = 0;
-    }
-    return (my_value);
-}
-
-//getter for send circular buffer. 
-
-unsigned int buffer_GetCount(ringBufCAN_t* _this) {
-    return _this->count;
-}
-
