@@ -1,6 +1,6 @@
 #include <stddef.h>
 #include "DataPublishing.h"
-#include "CANFastTransfer.h"
+#include "CAN_Handler/CANFastTransfer.h"
 #include "Definitions.h"
 #include "Timers.h"
 

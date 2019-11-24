@@ -20,7 +20,7 @@
 #include "Definitions.h"
 #include "Timers.h"
 #include "motorHandler.h"
-#include "CANFastTransfer.h"
+#include "CAN_Handler/CANFastTransfer.h"
 
 #define CHANNEL_0_CAN 0
 #define CHANNEL_1_CAN 1

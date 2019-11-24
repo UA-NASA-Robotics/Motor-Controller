@@ -134,7 +134,8 @@
       <logicalFolder name="f2" displayName="app" projectFiles="true">
         <logicalFolder name="f3" displayName="CAN_Handler" projectFiles="true">
           <itemPath>../src/CAN.c</itemPath>
-          <itemPath>../src/CANbufferHandler.c</itemPath>
+          <itemPath>../src/CAN_Handler/CANFastTransfer.c</itemPath>
+          <itemPath>../src/CAN_Handler/CANbufferHandler.c</itemPath>
         </logicalFolder>
         <logicalFolder name="f2" displayName="MotorSystems" projectFiles="true">
           <itemPath>../src/motorHandler.c</itemPath>
@@ -193,7 +194,6 @@
         <itemPath>../src/bufferHandler.c</itemPath>
         <itemPath>../src/uart_Handler.c</itemPath>
         <itemPath>../src/Timers.c</itemPath>
-        <itemPath>../src/CANFastTransfer.c</itemPath>
         <itemPath>../src/main.c</itemPath>
         <itemPath>../src/FastTransfer.c</itemPath>
         <itemPath>../src/helperFunctions.c</itemPath>
