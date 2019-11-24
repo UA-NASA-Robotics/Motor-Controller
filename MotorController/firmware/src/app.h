@@ -61,7 +61,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "Definitions.h"
 #include "Timers.h"
 #include "CAN.h"
-#include "CANFastTransfer.h"
+#include "CAN_Handler\CANFastTransfer.h"
 #include "changeNotification.h"
 #include "Motor.h"
 #include "DataPublishing.h"
