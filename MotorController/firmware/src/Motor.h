@@ -9,7 +9,7 @@
 #define	MOTOR_H
 
 #include "motorHandler.h"
-#include "CAN.h"
+#include "CAN_Handler/CAN.h"
 
 void initMotors();
 void MotorsAllStop();

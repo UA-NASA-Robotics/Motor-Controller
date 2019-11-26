@@ -9,6 +9,7 @@
           <itemPath>../src/CAN_Handler/CANFastTransfer.h</itemPath>
           <itemPath>../src/CAN_Handler/CANbufferHandler.h</itemPath>
           <itemPath>../src/CAN_Handler/GlobalCAN_IDs.h</itemPath>
+          <itemPath>../src/CAN_Handler/CAN.h</itemPath>
         </logicalFolder>
         <logicalFolder name="f2" displayName="MotorSystems" projectFiles="true">
           <itemPath>../src/Motor.h</itemPath>
@@ -49,7 +50,6 @@
         <itemPath>../src/uart_Handler.h</itemPath>
         <itemPath>../src/Definitions.h</itemPath>
         <itemPath>../src/changeNotification.h</itemPath>
-        <itemPath>../src/CAN.h</itemPath>
         <itemPath>../src/FastTransfer.h</itemPath>
         <itemPath>../src/actuatorControl.h</itemPath>
         <itemPath>../src/diggingMacros.h</itemPath>
@@ -133,9 +133,9 @@
                    projectFiles="true">
       <logicalFolder name="f2" displayName="app" projectFiles="true">
         <logicalFolder name="f3" displayName="CAN_Handler" projectFiles="true">
-          <itemPath>../src/CAN.c</itemPath>
           <itemPath>../src/CAN_Handler/CANFastTransfer.c</itemPath>
           <itemPath>../src/CAN_Handler/CANbufferHandler.c</itemPath>
+          <itemPath>../src/CAN_Handler/CAN.c</itemPath>
         </logicalFolder>
         <logicalFolder name="f2" displayName="MotorSystems" projectFiles="true">
           <itemPath>../src/motorHandler.c</itemPath>

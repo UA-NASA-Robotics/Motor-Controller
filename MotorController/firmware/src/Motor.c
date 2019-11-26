@@ -1,6 +1,6 @@
 #include "Motor.h"
 #include "MotorDefinitions.h"
-#include "CAN.h"
+#include "CAN_Handler/CAN.h"
 
 void initMotors()
 {
