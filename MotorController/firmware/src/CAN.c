@@ -28,8 +28,10 @@
 #define CHANNEL_3_CAN 3
 #define CHANNEL_4_CAN 4
 
+
 typedef struct {
     int rx_requested;
+    Data_t *callback;
     uint16_t CANID;
     uint16_t contentsID;
 } rx_message_tracking_t;
@@ -182,154 +184,159 @@ void CAN_ISR_CALLBACK(void) {
             }
             //            printf("RXData: %d\r",dataCombination);
             bool returnable = false;
-            //If you wanted data back, store it according to the type requested
-            switch (rx_message_requested[lastMessageIndexSent].rx_requested) {
-                case NO_DATA_REQUESTED:
-
-                    break;
-                case ERROR_REQUESTED:
-                    switch (comparableAddress) {
-                        case RIGHTMOTORID:
-                            storeMotorError(&RightMotor, dataCombination);
-                            break;
-                        case LEFTMOTORID:
-                            storeMotorError(&LeftMotor, dataCombination);
-                            break;
-                        case DRUMMOTORID:
-                            storeMotorError(&DrumMotor, dataCombination);
-                            break;
-                        case ARMMOTORID:
-                            storeMotorError(&ArmMotor, dataCombination);
-                            break;
-                        case PLOWMOTORID:
-                            storeMotorError(&PlowMotor, dataCombination);
-                            break;
-                    }
-                    break;
-                case ENCODER_POSITION_REQUESTED:
-                case HALL_POSITION_REQUESTED:
-                case SSI_ENCODER_POSITION_REQUESTED:
-                    switch (comparableAddress) {
-                        case RIGHTMOTORID:
-                            storeMotorPosition(&RightMotor, dataCombination);
-                            break;
-                        case LEFTMOTORID:
-                            storeMotorPosition(&LeftMotor, dataCombination);
-                            break;
-                        case DRUMMOTORID:
-                            storeMotorPosition(&DrumMotor, dataCombination);
-                            break;
-                        case ARMMOTORID:
-                            storeMotorPosition(&ArmMotor, dataCombination);
-                            break;
-                        case PLOWMOTORID:
-                            storeMotorPosition(&PlowMotor, dataCombination);
-                            break;
-                    }
-                    //CANbufPut(&CAN_rx_buffer,rxPacket);
-                    break;
-
-                case ANALOG_0_REQUESTED:
-                    switch (comparableAddress) {
-                        case RIGHTMOTORID:
-                            storeMotorAnalog0(&RightMotor, (int16_t) dataCombination);
-                            break;
-                        case LEFTMOTORID:
-                            storeMotorAnalog0(&LeftMotor, (int16_t) dataCombination);
-                            break;
-                        case DRUMMOTORID:
-                            storeMotorAnalog0(&DrumMotor, (int16_t) dataCombination);
-                            break;
-                        case ARMMOTORID:
-                            storeMotorAnalog0(&ArmMotor, (int16_t) dataCombination);
-                            break;
-                        case PLOWMOTORID:
-                            storeMotorAnalog0(&PlowMotor, (int16_t) dataCombination);
-                            break;
-                    }
-                    break;
-                case ANALOG_1_REQUESTED:
-                    switch (comparableAddress) {
-                        case RIGHTMOTORID:
-                            storeMotorAnalog1(&RightMotor, (int16_t) dataCombination);
-                            break;
-                        case LEFTMOTORID:
-                            storeMotorAnalog1(&LeftMotor, (int16_t) dataCombination);
-                            break;
-                        case DRUMMOTORID:
-                            storeMotorAnalog1(&DrumMotor, (int16_t) dataCombination);
-                            break;
-                        case ARMMOTORID:
-                            storeMotorAnalog1(&ArmMotor, (int16_t) dataCombination);
-                            break;
-                        case PLOWMOTORID:
-                            storeMotorAnalog1(&PlowMotor, (int16_t) dataCombination);
-                            break;
-                    }
-                    break;
-                case DIGITAL_INPUT_REQUESTED:
-                    switch (comparableAddress) {
-                        case RIGHTMOTORID:
-                            storeMotorDigitalInputs(&RightMotor, (uint8_t) dataCombination);
-                            break;
-                        case LEFTMOTORID:
-                            storeMotorDigitalInputs(&LeftMotor, (uint8_t) dataCombination);
-                            break;
-                        case DRUMMOTORID:
-                            storeMotorDigitalInputs(&DrumMotor, (uint8_t) dataCombination);
-                            break;
-                        case ARMMOTORID:
-                            storeMotorDigitalInputs(&ArmMotor, (uint8_t) dataCombination);
-                            //                            printf("dataComb: %u\r",(uint8_t)dataCombination);      
-                            //                            printf("packet4: %u\r",(uint8_t)rxPacket.messageContents[4]);                          
-                            break;
-                        case PLOWMOTORID:
-                            storeMotorDigitalInputs(&PlowMotor, (uint8_t) dataCombination);
-                            break;
-                    }
-                    break;
-                case POSITION_REACHED_REQUESTED:
-                    if ((dataCombination & 0x10) > 0) {
-                        returnable = true;
-                    }
-                    switch (comparableAddress) {
-                        case RIGHTMOTORID:
-                            storeMotorPositionReached(&RightMotor, returnable);
-                            break;
-                        case LEFTMOTORID:
-                            storeMotorPositionReached(&LeftMotor, returnable);
-                            break;
-                        case DRUMMOTORID:
-                            storeMotorPositionReached(&DrumMotor, returnable);
-                            break;
-                        case ARMMOTORID:
-                            storeMotorPositionReached(&ArmMotor, returnable);
-                            break;
-                        case PLOWMOTORID:
-                            storeMotorPositionReached(&PlowMotor, returnable);
-                            break;
-                    }
-                    break;
-                case CURRENT_USAGE:
-                    switch (comparableAddress) {
-                        case RIGHTMOTORID:
-                            storeMotorCurrent(&RightMotor, (int16_t) dataCombination);
-                            break;
-                        case LEFTMOTORID:
-                            storeMotorCurrent(&LeftMotor, (int16_t) dataCombination);
-                            break;
-                        case DRUMMOTORID:
-                            storeMotorCurrent(&DrumMotor, (int16_t) dataCombination);
-                            break;
-                        case ARMMOTORID:
-                            storeMotorCurrent(&ArmMotor, (int16_t) dataCombination);
-                            break;
-                        case PLOWMOTORID:
-                            storeMotorCurrent(&PlowMotor, (int16_t) dataCombination);
-                            break;
-                    }
-                    break;
+            if(rx_message_requested[lastMessageIndexSent].rx_requested != NO_DATA_REQUESTED && rx_message_requested[lastMessageIndexSent].callback != NULL)
+            {
+                ((Data_t*)(rx_message_requested[lastMessageIndexSent].callback))->data = dataCombination;
+                ((Data_t*)(rx_message_requested[lastMessageIndexSent].callback))->newDataFlag = true;
             }
+            //If you wanted data back, store it according to the type requested
+//            switch (rx_message_requested[lastMessageIndexSent].rx_requested) {
+//                case NO_DATA_REQUESTED:
+//
+//                    break;
+//                case ERROR_REQUESTED:
+//                    switch (comparableAddress) {
+//                        case RIGHTMOTORID:
+//                            storeMotorError(&RightMotor, dataCombination);
+//                            break;
+//                        case LEFTMOTORID:
+//                            storeMotorError(&LeftMotor, dataCombination);
+//                            break;
+//                        case DRUMMOTORID:
+//                            storeMotorError(&DrumMotor, dataCombination);
+//                            break;
+//                        case ARMMOTORID:
+//                            storeMotorError(&ArmMotor, dataCombination);
+//                            break;
+//                        case PLOWMOTORID:
+//                            storeMotorError(&PlowMotor, dataCombination);
+//                            break;
+//                    }
+//                    break;
+//                case ENCODER_POSITION_REQUESTED:
+//                case HALL_POSITION_REQUESTED:
+//                case SSI_ENCODER_POSITION_REQUESTED:
+//                    switch (comparableAddress) {
+//                        case RIGHTMOTORID:
+//                            storeMotorPosition(&RightMotor, dataCombination);
+//                            break;
+//                        case LEFTMOTORID:
+//                            storeMotorPosition(&LeftMotor, dataCombination);
+//                            break;
+//                        case DRUMMOTORID:
+//                            storeMotorPosition(&DrumMotor, dataCombination);
+//                            break;
+//                        case ARMMOTORID:
+//                            storeMotorPosition(&ArmMotor, dataCombination);
+//                            break;
+//                        case PLOWMOTORID:
+//                            storeMotorPosition(&PlowMotor, dataCombination);
+//                            break;
+//                    }
+//                    //CANbufPut(&CAN_rx_buffer,rxPacket);
+//                    break;
+//
+//                case ANALOG_0_REQUESTED:
+//                    switch (comparableAddress) {
+//                        case RIGHTMOTORID:
+//                            storeMotorAnalog0(&RightMotor, (int16_t) dataCombination);
+//                            break;
+//                        case LEFTMOTORID:
+//                            storeMotorAnalog0(&LeftMotor, (int16_t) dataCombination);
+//                            break;
+//                        case DRUMMOTORID:
+//                            storeMotorAnalog0(&DrumMotor, (int16_t) dataCombination);
+//                            break;
+//                        case ARMMOTORID:
+//                            storeMotorAnalog0(&ArmMotor, (int16_t) dataCombination);
+//                            break;
+//                        case PLOWMOTORID:
+//                            storeMotorAnalog0(&PlowMotor, (int16_t) dataCombination);
+//                            break;
+//                    }
+//                    break;
+//                case ANALOG_1_REQUESTED:
+//                    switch (comparableAddress) {
+//                        case RIGHTMOTORID:
+//                            storeMotorAnalog1(&RightMotor, (int16_t) dataCombination);
+//                            break;
+//                        case LEFTMOTORID:
+//                            storeMotorAnalog1(&LeftMotor, (int16_t) dataCombination);
+//                            break;
+//                        case DRUMMOTORID:
+//                            storeMotorAnalog1(&DrumMotor, (int16_t) dataCombination);
+//                            break;
+//                        case ARMMOTORID:
+//                            storeMotorAnalog1(&ArmMotor, (int16_t) dataCombination);
+//                            break;
+//                        case PLOWMOTORID:
+//                            storeMotorAnalog1(&PlowMotor, (int16_t) dataCombination);
+//                            break;
+//                    }
+//                    break;
+//                case DIGITAL_INPUT_REQUESTED:
+//                    switch (comparableAddress) {
+//                        case RIGHTMOTORID:
+//                            storeMotorDigitalInputs(&RightMotor, (uint8_t) dataCombination);
+//                            break;
+//                        case LEFTMOTORID:
+//                            storeMotorDigitalInputs(&LeftMotor, (uint8_t) dataCombination);
+//                            break;
+//                        case DRUMMOTORID:
+//                            storeMotorDigitalInputs(&DrumMotor, (uint8_t) dataCombination);
+//                            break;
+//                        case ARMMOTORID:
+//                            storeMotorDigitalInputs(&ArmMotor, (uint8_t) dataCombination);
+//                            //                            printf("dataComb: %u\r",(uint8_t)dataCombination);      
+//                            //                            printf("packet4: %u\r",(uint8_t)rxPacket.messageContents[4]);                          
+//                            break;
+//                        case PLOWMOTORID:
+//                            storeMotorDigitalInputs(&PlowMotor, (uint8_t) dataCombination);
+//                            break;
+//                    }
+//                    break;
+//                case POSITION_REACHED_REQUESTED:
+//                    if ((dataCombination & 0x10) > 0) {
+//                        returnable = true;
+//                    }
+//                    switch (comparableAddress) {
+//                        case RIGHTMOTORID:
+//                            storeMotorPositionReached(&RightMotor, returnable);
+//                            break;
+//                        case LEFTMOTORID:
+//                            storeMotorPositionReached(&LeftMotor, returnable);
+//                            break;
+//                        case DRUMMOTORID:
+//                            storeMotorPositionReached(&DrumMotor, returnable);
+//                            break;
+//                        case ARMMOTORID:
+//                            storeMotorPositionReached(&ArmMotor, returnable);
+//                            break;
+//                        case PLOWMOTORID:
+//                            storeMotorPositionReached(&PlowMotor, returnable);
+//                            break;
+//                    }
+//                    break;
+//                case CURRENT_USAGE:
+//                    switch (comparableAddress) {
+//                        case RIGHTMOTORID:
+//                            storeMotorCurrent(&RightMotor, (int16_t) dataCombination);
+//                            break;
+//                        case LEFTMOTORID:
+//                            storeMotorCurrent(&LeftMotor, (int16_t) dataCombination);
+//                            break;
+//                        case DRUMMOTORID:
+//                            storeMotorCurrent(&DrumMotor, (int16_t) dataCombination);
+//                            break;
+//                        case ARMMOTORID:
+//                            storeMotorCurrent(&ArmMotor, (int16_t) dataCombination);
+//                            break;
+//                        case PLOWMOTORID:
+//                            storeMotorCurrent(&PlowMotor, (int16_t) dataCombination);
+//                            break;
+//                    }
+//                    break;
+//            }
         }
 
         /* Message processing is done, update the message buffer pointer. */
@@ -344,6 +351,7 @@ void CAN_ISR_CALLBACK(void) {
             if (rx_message_requested[lastMessageIndexSent].CANID == rxPacket.canAddress) {
                 //Wipe the buffer when finishing this section
                 rx_message_requested[lastMessageIndexSent].rx_requested = NO_DATA_REQUESTED;
+                rx_message_requested[lastMessageIndexSent].callback = NULL;
                 rx_message_requested[lastMessageIndexSent].CANID = 0;
 
                 C1FIFOINT0bits.TXEMPTYIE = 1;
@@ -386,6 +394,7 @@ void CAN_ISR_CALLBACK(void) {
 
 void messageTransmit(my_can_packet_t packetToSend) {
     rx_message_requested[buff_get_head_index(&CAN_tx_buffer)].rx_requested = NO_DATA_REQUESTED;
+    rx_message_requested[buff_get_head_index(&CAN_tx_buffer)].callback = NULL;
     rx_message_requested[buff_get_head_index(&CAN_tx_buffer)].CANID = (packetToSend.canAddress & 0x000F) + 0x5F0;
     CANbufPut(&CAN_tx_buffer, packetToSend);
     if (transmitStallCAN) {
@@ -402,8 +411,10 @@ void messageTransmit(my_can_packet_t packetToSend) {
 //This field will allow for messages to be auto sorted by response type
 //Currently this field is under utilized
 
-void messageTransmitWithResponse(my_can_packet_t packetToSend, int responseType) {
+void messageTransmitWithResponse(my_can_packet_t packetToSend, int responseType, Data_t *_callbackPtr) {
     rx_message_requested[buff_get_head_index(&CAN_tx_buffer)].rx_requested = responseType;
+    rx_message_requested[buff_get_head_index(&CAN_tx_buffer)].callback = _callbackPtr;
+    
     rx_message_requested[buff_get_head_index(&CAN_tx_buffer)].CANID = (packetToSend.canAddress & 0x000F) + 0x5F0;
     rx_message_requested[buff_get_head_index(&CAN_tx_buffer)].contentsID = (((uint16_t) packetToSend.messageContents[2]) << 8) + packetToSend.messageContents[1];
     CANbufPut(&CAN_tx_buffer, packetToSend);
@@ -491,19 +502,19 @@ void sendMotorPacket(uint8_t motorAddress, uint16_t objectAddr, uint8_t subAddr,
 //Should include some response sorting potentially
 //Could have structures built with each motor to hold counts/position/etc.
 
-void sendMotorPacketWithResponse(uint8_t motorAddress, uint16_t objectAddr, uint8_t subAddr, long data, int responseType) {
-    my_can_packet_t sending;
-    sending.canChannel = 0;
-    sending.canAddress = 0x600 + motorAddress;
-    sending.DLC_Code = DLC_VALUE;
+//void sendMotorPacketWithResponse(uint8_t motorAddress, uint16_t objectAddr, uint8_t subAddr, long data, int responseType) {
+//    my_can_packet_t sending;
+//    sending.canChannel = 0;
+//    sending.canAddress = 0x600 + motorAddress;
+//    sending.DLC_Code = DLC_VALUE;
+//
+//    SDO_PACKET_t sendCommand = {objectAddr, subAddr, data};
+//    populateMotorPacketWrite(sending.messageContents, sendCommand);
+//
+//    messageTransmitWithResponse(sending, responseType);
+//}
 
-    SDO_PACKET_t sendCommand = {objectAddr, subAddr, data};
-    populateMotorPacketWrite(sending.messageContents, sendCommand);
-
-    messageTransmitWithResponse(sending, responseType);
-}
-
-void requestMotorPacketWithResponse(uint8_t motorAddress, uint16_t objectAddr, uint8_t subAddr, long data, int responseType) {
+void requestMotorPacketWithResponse(uint8_t motorAddress, uint16_t objectAddr, uint8_t subAddr, long data, int responseType, Data_t *_callback) {
     my_can_packet_t sending;
     sending.canChannel = 0;
     sending.canAddress = 0x600 + motorAddress;
@@ -512,7 +523,7 @@ void requestMotorPacketWithResponse(uint8_t motorAddress, uint16_t objectAddr, u
     SDO_PACKET_t sendCommand = {objectAddr, subAddr, data};
     populateMotorPacketRead(sending.messageContents, sendCommand);
 
-    messageTransmitWithResponse(sending, responseType);
+    messageTransmitWithResponse(sending, responseType, _callback);
 }
 
 //we really dont MIND waiting for this data to be accepted, during init we can wait all day

@@ -41,6 +41,15 @@ typedef enum {
 
 #define REVERSE_DRIVE_DIRECTION 
 
+#ifndef DATA_T
+#define DATA_T
+
+typedef struct {
+    int data;
+    bool newDataFlag;
+} Data_t;
+
+#endif
 
 #endif	/* DEFINITIONS_H */
 

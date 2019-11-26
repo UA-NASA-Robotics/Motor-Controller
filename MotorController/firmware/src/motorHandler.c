@@ -52,8 +52,8 @@ void InitMotor(Motor_t* motor, char address, char statusBit, char mob, int maxRP
     sendMotorPacket(address, MOTOR_POLARITY);
     // Enable Motor
     sendMotorPacket(address, POWER_ENABLE);
-    sendMotorPacketWithResponse(address, MOTOR_ANALOG_0_INPUT_REQUEST, ANALOG_0_REQUESTED);
-    sendMotorPacketWithResponse(address, MOTOR_DIGITAL_INPUT_REQUEST, DIGITAL_INPUT_REQUESTED);
+    requestMotorPacketWithResponse(address, MOTOR_ANALOG_0_INPUT_REQUEST, ANALOG_0_REQUESTED,&(motor->A0));
+    requestMotorPacketWithResponse(address, MOTOR_DIGITAL_INPUT_REQUEST, DIGITAL_INPUT_REQUESTED,&(motor->Digital));
 }
 
 void InitMotor_BG75(Motor_t* motor, char address, char statusBit, char mob, int maxRPM, int maxCurrent, LimitSwitch_t limitSwitch) {

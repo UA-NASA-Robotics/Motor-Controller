@@ -11,6 +11,16 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#ifndef DATA_T
+#define DATA_T
+
+typedef struct {
+    int data;
+    bool newDataFlag;
+} Data_t;
+
+#endif
+
 typedef enum {
     Velocity = 0,
     Position,
@@ -45,6 +55,15 @@ typedef struct {
     bool FreashAnalog;
     bool FreshPosition;
     int16_t errorPresent;
+    Data_t EncoderPos;
+    Data_t SSIEncoderPos;
+    Data_t HallPos;
+    Data_t A0;
+    Data_t A1;
+    Data_t Digital;
+    Data_t PosReached;
+    Data_t ErrorRqst;
+    Data_t CurrentUsage;
 } Motor_t;
 
 //WARNING!! 
