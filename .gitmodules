@@ -1,3 +1,6 @@
 [submodule "MotorController/firmware/src/CAN_Handler"]
 	path = MotorController/firmware/src/CAN_Handler
 	url = https://github.com/UA-NASA-Robotics/CAN_Handler
+[submodule "Motor-Controller/firmware/src/Macro_Handler"]
+	path = Motor-Controller/firmware/src/Macro_Handler
+	url = https://github.com/UA-NASA-Robotics/Macro_Handler.git

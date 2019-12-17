@@ -14,6 +14,7 @@
 #include "diggingMacros.h"
 #include "macroManagement.h"
 #include "testingFunctions.h"
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Variable Declaration
@@ -52,15 +53,16 @@ void APP_Initialize(void) {
 
     }
 
-   
+
     initCANISRs();
     initCANFT();
     DRV_CAN0_Open();
-    isLoaded = true;
-    initGlobalData(Init_Element, getLoadedState, 500);
+    
+    initGlobalData(DEVICE_STATUS, getLoadedState, 500);
+    initGlobalData(DEVICE_MACRO, getRunningMacros, 500);
 
-//    initMotors();
-//    MotorsAllStop();
+    initMotors();
+    MotorsAllStop();
 
     //    InitUARTModule(&MasterUart,UART_Master);
     //    InitUARTModule(&GyroUart,UART_Gyro);
@@ -71,13 +73,15 @@ void APP_Initialize(void) {
 
     delay(1000);
 
-
     //CALL THIS AFTER ZEROING STUFF
     initMacroCommunications();
-
-
+    initMacroMGR();
+    setMotorControlMode(&RightMotor, Velocity, 0);
+    setMotorControlMode(&LeftMotor, Velocity, 0);
+    isLoaded = true;
+//     setMotorVel(&DrumMotor, 4000);
+//     while(1);
 }
-
 /******************************************************************************
   Function:
     void APP_Tasks ( void )
@@ -111,38 +115,40 @@ void APP_Tasks(void) {
 
         case TRANSMIT_GLOBAL_INFO:
         {
-             
-               publishData();
-                LED1 ^=1;
-           
+
+            publishData();
+            LED1 ^= 1;
+
             appData.state = APP_STATE_RECEIVE_COMS;
             break;
         }
         case APP_STATE_RECEIVE_COMS:
         {
-            
+            // add any received macros to the macro queue
+            handleMacroStatus();
+            ReceiveDataCAN(FT_LOCAL);
+            if (getRunningMacros() != 0) {
+                runMacros();
+            } else {
+                handleManualControl(getManualDriveSpeed(), getManualArmSpeed(), getManualBucketSpeed(), 0);
+                 
+                
+            }
             appData.state = APP_STATE_AWAITING_RESPONSE;
             break;
         }
             //This is for waiting for an interrupt pin response
         case APP_STATE_AWAITING_RESPONSE:
         {
-            int performMacro = false;
-            short macroData = 0;
-            if (receiveData(&MasterFT)) {
-                performMacro = MasterFT.ReceivedData[8];
-                macroData = (short) MasterFT.ReceivedData[9];
-                //MasterFT.ReceivedData[8] = 0;
-                MasterFT.ReceivedData[9] = 0;
-                processMacro(performMacro, macroData);
-            }
-            if(ReceiveDataCAN(FT_GLOBAL))
-            {
-                
-            }
-            //            if (timerDone(&TestTimer))
-            //                if (setDiggingHeight(3000))
-            //                    LED4 ^= 1;
+            //            int performMacro = false;
+            //            short macroData = 0;
+            //            if (receiveData(&MasterFT)) {
+            //                performMacro = MasterFT.ReceivedData[8];
+            //                macroData = (short) MasterFT.ReceivedData[9];
+            //                //MasterFT.ReceivedData[8] = 0;
+            //                MasterFT.ReceivedData[9] = 0;
+            //                processMacro(performMacro, macroData);
+            //            }
 
             appData.state = TRANSMIT_GLOBAL_INFO;
             break;
@@ -156,8 +162,7 @@ void APP_Tasks(void) {
     }
 }
 
-int getLoadedState()
-{
+int getLoadedState() {
     return (isLoaded ? 0x01 : 0x00);
 }
 

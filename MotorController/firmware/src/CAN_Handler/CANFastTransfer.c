@@ -13,7 +13,7 @@ void setNewDataFlag(FT_type_t _t, int index);
 ringBufCAN_t transmit_buffer_CAN, send_buffer_CAN_FT, rx_buffer_CAN;
 ringBufCAN_t rx_buffer_CAN_Global;
 
-bool dataReceived = false;
+bool dataReceived[2] = {false,false};
 volatile int * receiveArrayAddressCAN[2];
 volatile bool * receiveArrayAddressCAN_Flag[2];
 unsigned char moduleAddressCAN[2];
@@ -97,19 +97,21 @@ void clearCANFastDataValueRange(int startIndex, int end) {
 void ReceiveCANFast(my_can_packet_t *p, FT_type_t _t) // interrupt callback
 {
     ringBufCAN_t *rx_Buff;
-    if (_t == FT_LOCAL) rx_Buff = &rx_buffer_CAN;
-    else rx_Buff = &rx_buffer_CAN_Global;
+    if (_t == FT_LOCAL) 
+        rx_Buff = &rx_buffer_CAN;
+    else 
+        rx_Buff = &rx_buffer_CAN_Global;
 
     if ((p->canAddress >> 6) == moduleAddressCAN[_t]) {
         if (p->DLC_Code == 8 || p->DLC_Code == 9) //Check number of bytes, if 8 read in two ints
         {
             if ((p->messageContents[0] << 8) +(p->messageContents[1]) < MaxIndex[_t]) {
                 buffer_put(rx_Buff, (p->messageContents[0] << 8) +(p->messageContents[1]), (p->messageContents[2] << 8) +(p->messageContents[3]));
-                dataReceived = 1;
+                dataReceived[_t] = 1;
             }
             if ((p->messageContents[4] << 8) +(p->messageContents[5]) < MaxIndex[_t]) {
                 buffer_put(rx_Buff, (p->messageContents[4] << 8) +(p->messageContents[5]), (p->messageContents[6] << 8) +(p->messageContents[7]));
-                dataReceived = 1;
+                dataReceived[_t] = 1;
             }
             buffer_put(rx_Buff, LAST_BOARD_RECEIEVED, (p->canAddress & 0b11111));
         } else //else read in one int
@@ -117,7 +119,7 @@ void ReceiveCANFast(my_can_packet_t *p, FT_type_t _t) // interrupt callback
             if ((p->messageContents[0] << 8) +(p->messageContents[1]) < MaxIndex[_t]) {
 
                 buffer_put(rx_Buff, (p->messageContents[0] << 8) +(p->messageContents[1]), (p->messageContents[2] << 8) +(p->messageContents[3]));
-                dataReceived = 1;
+                dataReceived[_t] = 1;
             }
             buffer_put(rx_Buff, LAST_BOARD_RECEIEVED, (p->canAddress & 0b11111));
         }
@@ -129,8 +131,8 @@ int ReceiveDataCAN(FT_type_t _t) {
     if (_t == FT_LOCAL) rx_Buff = &rx_buffer_CAN;
     else rx_Buff = &rx_buffer_CAN_Global;
 
-    if (dataReceived) {
-        dataReceived = 0;
+    if (dataReceived[_t]) {
+        dataReceived[_t] = 0;
         int i = buffer_GetCount(rx_Buff);
         if (i) //this better be true ... if not in instant receive 
         {

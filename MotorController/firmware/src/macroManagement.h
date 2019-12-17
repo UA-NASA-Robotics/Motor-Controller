@@ -21,6 +21,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+void handleMacroStatus();
 bool continueMacro(void);
 void setContinueMacroState(bool state);
 void initMacroCommunications(void);

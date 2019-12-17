@@ -18,8 +18,8 @@
 #ifndef _DRIVING_CONTROL_H    /* Guard against multiple inclusion */
 #define _DRIVING_CONTROL_H
 
-#define driveDistance(a,b) driveSeperatDistances(a,a, b, b);
-
+bool driveDist(int _distance);
+bool driveDistance(int _distance,int _speed);
 void driveSeperatDistances(int L_distance,int R_distance, int L_speed, int R_speed);
 void driveDistanceVariedSpeed(int distance, int speed);
 

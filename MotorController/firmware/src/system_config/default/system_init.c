@@ -212,6 +212,10 @@ void SYS_Initialize ( void* data )
     SYS_PORTS_Initialize();
 
     /* Initialize Drivers */
+
+    /* Initialize ADC */
+    DRV_ADC_Initialize();
+
     /* Initialize CAN Driver 0 */
     DRV_CAN0_Initialize();
 

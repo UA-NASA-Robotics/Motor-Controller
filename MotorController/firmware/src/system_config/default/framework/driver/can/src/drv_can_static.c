@@ -113,7 +113,7 @@ void DRV_CAN0_Initialize(void)
     PLIB_CAN_FilterEnable(CAN_ID_1, CAN_FILTER2);
 
     PLIB_CAN_FilterMaskConfigure(CAN_ID_1, CAN_FILTER_MASK0, 0x7F0, CAN_SID, CAN_FILTER_MASK_IDE_TYPE);
-    PLIB_CAN_FilterMaskConfigure(CAN_ID_1, CAN_FILTER_MASK1, 0x0, CAN_SID, CAN_FILTER_MASK_IDE_TYPE);
+    PLIB_CAN_FilterMaskConfigure(CAN_ID_1, CAN_FILTER_MASK1, 0xFE0, CAN_SID, CAN_FILTER_MASK_IDE_TYPE);
     PLIB_CAN_FilterMaskConfigure(CAN_ID_1, CAN_FILTER_MASK2, 0xFE0, CAN_SID, CAN_FILTER_MASK_IDE_TYPE);
 
     /* Switch the CAN module to Normal mode. Wait until the switch is complete */

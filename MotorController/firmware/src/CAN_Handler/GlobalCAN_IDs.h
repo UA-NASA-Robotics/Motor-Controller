@@ -14,9 +14,25 @@ extern "C" {
 
 #define GLOBAL_DEVICES 10
 #define GLOBAL_DATA_IDX_PER_DEV 7
-
-
-
+#ifndef GBL_ADDRESS
+#define GBL_ADDRESS
+typedef enum {
+    CONTROLBOX = 1,
+    POZYX,
+    JUICE_BOARD,
+    ROUTER_CARD,
+    MASTER_CONTROLLER,
+    MOTOR_CONTROLLER,
+    GYRO_CONTROLLER,
+    STRAIN_SENSOR,
+    OPTICAL_FLOW,
+    RASPBERRY_PI,
+    LED_CARD,
+    GLOBAL_ADDRESS = 31
+} Addresses_t;
+#endif
+#ifndef GBL_DEV_IDX
+#define GBL_DEV_IDX
 //Complete index of all the
 typedef enum {
 	DEVICE_STATUS=0,
@@ -27,6 +43,8 @@ typedef enum {
 	DATA_3,
 	DATA_4
 } GlobalDeviceData_t;
+#endif
+
 #define getGBL_DEVICE_STATUS(c) c*GLOBAL_DATA_IDX_PER_DEV + DEVICE_STATUS
 #define getGBL_MACRO_INDEX(c) c*GLOBAL_DATA_IDX_PER_DEV + DEVICE_MACRO
 

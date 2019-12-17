@@ -12,16 +12,21 @@
 extern "C" {
 #endif
 #include <stdbool.h>
+    
+#ifndef GBL_DEV_IDX
+#define GBL_DEV_IDX
+//Complete index of all the
+typedef enum {
+	DEVICE_STATUS=0,
+	DEVICE_MACRO,
+	DATA_0,
+	DATA_1,
+	DATA_2,
+	DATA_3,
+	DATA_4
+} GlobalDeviceData_t;
+#endif
 
-    typedef enum {
-        Init_Element = 0,
-        Element_1,
-        Element_2,
-        Element_3,
-        Element_4,
-        Element_5,
-        Element_6,
-    } GLOBL_dataElement_t;
     /** \brief (initGlobalData): Initializes the data publishing values to be put on the can bus at a particular interval
      *
      * \param (_interval):  what is the index in the "memory" that is sent out
@@ -30,7 +35,7 @@ extern "C" {
      * \param (_interval):  The interval you wish to publish the data on the can buss
      * \return: N/A
      */
-    void initGlobalData(GLOBL_dataElement_t _index, int (*getFuncPointer)(void), unsigned long _interval);
+    void initGlobalData(GlobalDeviceData_t _index, int (*getFuncPointer)(void), unsigned long _interval);
 
 
 

@@ -53,6 +53,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "system/devcon/sys_devcon.h"
 #include "system/clk/sys_clk.h"
 #include "system/int/sys_int.h"
+#include "driver/adc/drv_adc_static.h"
 #include "driver/tmr/drv_tmr_static.h"
 #include "peripheral/int/plib_int.h"
 #include "driver/can/drv_can_static.h"

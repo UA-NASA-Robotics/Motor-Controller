@@ -15,10 +15,16 @@ timers_t driveTimer;
 bool leftReached = false;
 bool rightReached = false;
 
-
+bool driveDist(int _distance)
+{
+    driveDistance(_distance,300);
+}
 
 //Send a number of centimeters for each tred to travel, let 'em go
-
+bool driveDistance(int _distance,int _speed)
+{
+    driveSeperatDistances(_distance, _distance, _speed, _speed);
+}
 void driveSeperatDistances(int L_distance, int R_distance, int L_speed, int R_speed) {
 
 #ifdef REVERSE_DRIVE_DIRECTION

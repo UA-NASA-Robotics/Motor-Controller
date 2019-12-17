@@ -9,7 +9,7 @@
 timers_t dataPeriodTimer[DATA_ELEMENTS_COUNT];
 int (*dataRetrievalFunc[DATA_ELEMENTS_COUNT])();
 
-void initGlobalData(GLOBL_dataElement_t _index, int (*getFuncPointer)(void), unsigned long _interval) {
+void initGlobalData(GlobalDeviceData_t _index, int (*getFuncPointer)(void), unsigned long _interval) {
     setTimerInterval(&dataPeriodTimer[_index], _interval);
     dataRetrievalFunc[_index] = getFuncPointer;
 

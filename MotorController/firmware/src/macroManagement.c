@@ -8,21 +8,71 @@
 #include "actuatorControl.h"
 #include "Definitions.h"
 #include "ArcDriveMacro.h"
-
 #include "Timers.h"
-
-#define DRIVE_MACRO         3
+#include "CAN_Handler/CANFastTransfer.h"
+#include "Macro_Handler/Macro_Mgr.h"
+#include <stdlib.h>
+#include <stdio.h>
+#define DRIVE_MACRO         (uint16_t)(1 << 10)
 #define ARC_DRIVE_MACRO     4
 #define DIGGING_MACRO       5
 #define DUMPING_MACRO       6
-#define dumbMac1            7
-#define dumbMac2            8
+#define dumbMac1             (uint16_t)(1 << 11)
+#define dumbMac2            3
 #define dumbMac3            9
 #define dumbMac4            10
-
-
-
 #define ZERO_SYSTEMS        100
+
+
+PFI getMacroHandler(unsigned char _macroID);
+
+
+timers_t voidTime,voidTime2;
+
+bool Dummy(int val) {
+    if (voidTime.timerInterval != val) {
+        setTimerInterval(&voidTime, val);
+    }
+    return timerDone(&voidTime);
+}
+bool Dummy2(int val) {
+    if (voidTime2.timerInterval != val) {
+        setTimerInterval(&voidTime2, val);
+    }
+    return timerDone(&voidTime2);
+}
+
+void handleMacroStatus() {
+    ReceiveDataCAN(FT_GLOBAL);
+
+    /* If a macro is seen on the global bus from the router card*/
+    if (getNewDataFlagStatus(FT_GLOBAL, getGBL_MACRO_INDEX(ROUTER_CARD))) {
+
+        int macroID = getCANFastData(FT_GLOBAL, getGBL_MACRO_INDEX(ROUTER_CARD));
+        int macroDATA = getCANFastData(FT_GLOBAL, getGBL_MACRO_INDEX(ROUTER_CARD) + 1);
+        if (macroID == 0) {
+            clearMacros();
+        } else {
+            /* Add the macro to the queue*/
+            switch (macroID) {
+                case DRIVE_MACRO:
+                    setMacroCallback(Dummy, 5000, DRIVE_MACRO);
+                    setMacroCallback(Dummy2, 15000, dumbMac1);
+                    break;
+                default:
+                    break;
+            }
+
+        }
+    }
+    if (ReceiveDataCAN(FT_LOCAL)) {
+
+    }
+
+}
+
+
+
 
 
 void finishMacro(void);
@@ -49,6 +99,8 @@ void updateMacroCommunications(void) {
     }
 }
 
+
+
 void processMacro(uint8_t performMacro, int macroData) {
     continueTheMacro = true;
     switch (performMacro) {
@@ -66,81 +118,18 @@ void processMacro(uint8_t performMacro, int macroData) {
             ArcDrive(MasterFT.ReceivedData[9], MasterFT.ReceivedData[10], MasterFT.ReceivedData[11], MasterFT.ReceivedData[12], MasterFT.ReceivedData[13]);
             break;
         case ZERO_SYSTEMS:
-
             break;
-        case dumbMac1: //Drive Strait
-
-            driveDistance(506, 2500);
-            fullDiggingRoutine();
-            finishMacro();
-
+        case dumbMac1:
             break;
-        case dumbMac2: //Turn counterClockwise 90 degrees then drive
-
-            driveDistance(506, 2500);
-            fullDiggingRoutine();
-            finishMacro();
-
+        case dumbMac2:
             break;
-        case dumbMac3: //trun clockwise 90 degrees then drive
-
-            driveDistance(506, 2500);
-            fullDiggingRoutine();
-            finishMacro();
-
+        case dumbMac3:
             break;
-        case dumbMac4: //turn 180 then drive 90 degrees
-
-            driveDistance(506, 2500);
-            fullDiggingRoutine();
-            finishMacro();
+        case dumbMac4:
             break;
     }
 
-    if (MasterFT.ReceivedData[8] == 0) {
-        LED1 = 0;
-        LED2 = 0;
-        LED3 = 0;
-        LED4 = 0;
 
-        LED1 ^= 1;
-        delay(50);
-        LED2 ^= 1;
-        delay(50);
-        LED3 ^= 1;
-        delay(50);
-        LED4 ^= 1;
-        delay(50);
-
-        LED1 ^= 1;
-        delay(50);
-        LED2 ^= 1;
-        delay(50);
-        LED3 ^= 1;
-        delay(50);
-        LED4 ^= 1;
-        delay(50);
-
-        LED1 ^= 1;
-        delay(50);
-        LED2 ^= 1;
-        delay(50);
-        LED3 ^= 1;
-        delay(50);
-        LED4 ^= 1;
-        delay(50);
-    } else {
-
-        LED1 = 0;
-        LED2 = 0;
-        LED3 = 0;
-        LED4 = 0;
-        delay(1000);
-    }
-    MasterFT.ReceivedData[8] = 0;
-    finishMacro();
-    //Send completed
-    //OUTPUT_INTURRPT_PIN_3^=1;
 
 }
 
