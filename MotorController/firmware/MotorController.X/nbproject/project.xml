@@ -20,6 +20,7 @@
                 <sourceRootElem>..\src\default</sourceRootElem>
                 <sourceRootElem>..\src\system_config\default</sourceRootElem>
                 <sourceRootElem>../../../../MasterControler/NaviController/firmware/src</sourceRootElem>
+                <sourceRootElem>../../../../Master-Controller/NaviController/firmware/src/Macro_Handler</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>

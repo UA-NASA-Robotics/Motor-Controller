@@ -25,7 +25,7 @@
 #define DrumLS_ACTIVE   0
 #define DrumLS_NotActive   1
 
-#define REVERSE_DRIVE_DIRECTION 
+//#define REVERSE_DRIVE_DIRECTION 
 
 #ifndef DATA_T
 #define DATA_T

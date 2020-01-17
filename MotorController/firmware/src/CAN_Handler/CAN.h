@@ -22,7 +22,11 @@
 #include <xc.h>
 #include <stdbool.h>
 #include <stdint.h>
-#include "MotorDefinitions.h"
+
+
+#ifndef NO_DATA_REQUESTED               
+#define NO_DATA_REQUESTED               0
+#endif
 
 #define DLC_VALUE       8
 

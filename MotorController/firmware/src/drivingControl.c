@@ -10,108 +10,125 @@
 #include "changeNotification.h"
 
 #define COUNTS_PER_CENTI 2910//3108//2797//3636
-
+typedef enum {
+    Initialization = 0,
+    Drive
+} DriveMacro_t;
+DriveMacro_t DriveMacroState = Initialization;
 timers_t driveTimer;
 bool leftReached = false;
 bool rightReached = false;
-
-bool driveDist(int _distance)
+void resetDriveStates()
 {
-    driveDistance(_distance,300);
+    DriveMacroState = Initialization;
+}
+
+bool driveDist(int _distance) {
+    return driveDistance(_distance, 1000);
 }
 
 //Send a number of centimeters for each tred to travel, let 'em go
-bool driveDistance(int _distance,int _speed)
-{
-    driveSeperatDistances(_distance, _distance, _speed, _speed);
+
+bool driveDistance(int _distance, int _speed) {
+    return driveSeperatDistances(_distance, _distance, _speed, _speed);
 }
-void driveSeperatDistances(int L_distance, int R_distance, int L_speed, int R_speed) {
 
+
+
+bool driveSeperatDistances(int L_distance, int R_distance, int L_speed, int R_speed) {
+    switch (DriveMacroState) {
+        case Initialization:
 #ifdef REVERSE_DRIVE_DIRECTION
-    L_distance = (-1) * L_distance;
-    R_distance = (-1) * R_distance;
-    L_speed = (-1) * L_speed;
-    R_speed = (-1) * R_speed;
+            L_distance = (-1) * L_distance;
+            R_distance = (-1) * R_distance;
+            L_speed = (-1) * L_speed;
+            R_speed = (-1) * R_speed;
 #endif
-    
-    
-    //setPinState(&GyroPin2,1);
-    //Setup timer System
-    setTimerInterval(&driveTimer, 50);
 
-    //ADD THIS!!
-    bool notFaulted = true;
-    leftReached = false;
-    rightReached = false;
 
-    LeftMotor.PositionReached = false;
-    RightMotor.PositionReached = false;
+            //setPinState(&GyroPin2,1);
+            //Setup timer System
+            setTimerInterval(&driveTimer, 50);
 
-    //set position mode
-    setMotorControlMode(&LeftMotor, Position, L_speed);
-    setMotorControlMode(&RightMotor, Position, R_speed);
+            //ADD THIS!!
+            bool notFaulted = true;
+            leftReached = false;
+            rightReached = false;
 
-    //Motor Position Clear
-    storeMotorPositionReached(&LeftMotor, false);
-    storeMotorPositionReached(&RightMotor, false);
+            LeftMotor.PositionReached = false;
+            RightMotor.PositionReached = false;
 
-    //Clear the positioning on the motors
-    sendMotorPacket(LEFTMOTORID, SSI_ENCODER_POSITION_RESET);
-    sendMotorPacket(RIGHTMOTORID, SSI_ENCODER_POSITION_RESET);
+            //set position mode
+            setMotorControlMode(&LeftMotor, Position, L_speed);
+            setMotorControlMode(&RightMotor, Position, R_speed);
 
-    //set to drive a distance
-    setMotorCounts(&LeftMotor, -L_distance * COUNTS_PER_CENTI);
-    setMotorCounts(&RightMotor, R_distance * COUNTS_PER_CENTI);
+            //Motor Position Clear
+            storeMotorPositionReached(&LeftMotor, false);
+            storeMotorPositionReached(&RightMotor, false);
 
-    while ((!getMotorPosReached(&LeftMotor) || !getMotorPosReached(&RightMotor)) && (notFaulted) && continueMacro()) {
-        updateMacroCommunications();
-        if (timerDone(&driveTimer)) {
-            requestMotorData(&LeftMotor, ERROR_REQUESTED);
-            requestMotorData(&RightMotor, ERROR_REQUESTED);
-            requestMotorData(&LeftMotor, ENCODER_POSITION_REQUESTED);
-            requestMotorData(&RightMotor, ENCODER_POSITION_REQUESTED);
-            requestMotorData(&LeftMotor, POSITION_REACHED_REQUESTED);
-            requestMotorData(&RightMotor, POSITION_REACHED_REQUESTED);
-            LED1 ^= 1;
-            LED2 ^= 1;
-            LED3 ^= 1;
-            LED4 ^= 1;
+            //Clear the positioning on the motors
+            sendMotorPacket(LEFTMOTORID, SSI_ENCODER_POSITION_RESET);
+            sendMotorPacket(RIGHTMOTORID, SSI_ENCODER_POSITION_RESET);
 
-            if (getMotorPosReached(&LeftMotor) && !leftReached) {
+            //set to drive a distance
+            setMotorCounts(&LeftMotor, -L_distance * COUNTS_PER_CENTI);
+            setMotorCounts(&RightMotor, R_distance * COUNTS_PER_CENTI);
+            DriveMacroState = Drive;
+            break;
+        case Drive:
+            updateMacroCommunications();
+            if (timerDone(&driveTimer)) {
+                requestMotorData(&LeftMotor, ERROR_REQUESTED);
+                requestMotorData(&RightMotor, ERROR_REQUESTED);
+                requestMotorData(&LeftMotor, ENCODER_POSITION_REQUESTED);
+                requestMotorData(&RightMotor, ENCODER_POSITION_REQUESTED);
+                requestMotorData(&LeftMotor, POSITION_REACHED_REQUESTED);
+                requestMotorData(&RightMotor, POSITION_REACHED_REQUESTED);
+                LED1 ^= 1;
+                LED2 ^= 1;
+                LED3 ^= 1;
+                LED4 ^= 1;
+
+                if (getMotorPosReached(&LeftMotor) && !leftReached) {
+                    setMotorControlMode(&LeftMotor, Velocity, 0);
+                    //setMotorVel(&LeftMotor,0);
+                    leftReached = true;
+                }
+
+                if (getMotorPosReached(&RightMotor) && !rightReached) {
+                    setMotorControlMode(&RightMotor, Velocity, 0);
+                    //setMotorVel(&RightMotor,0);
+                    rightReached = true;
+                }
+
+                if (getMotorError(&RightMotor)) {
+                    clearMotorErrors(&RightMotor);
+                    int resetCounts = R_distance * COUNTS_PER_CENTI - RightMotor.Position;
+                    setMotorCounts(&RightMotor, resetCounts);
+
+                }
+                if (getMotorError(&LeftMotor)) {
+                    clearMotorErrors(&LeftMotor);
+                    int resetCounts = -L_distance * COUNTS_PER_CENTI - LeftMotor.Position;
+                    setMotorCounts(&LeftMotor, resetCounts);
+                }
+            }
+            if ((!getMotorPosReached(&LeftMotor) || !getMotorPosReached(&RightMotor)) && (notFaulted) && continueMacro()) {
                 setMotorControlMode(&LeftMotor, Velocity, 0);
-                //setMotorVel(&LeftMotor,0);
-                leftReached = true;
-            }
-
-            if (getMotorPosReached(&RightMotor) && !rightReached) {
                 setMotorControlMode(&RightMotor, Velocity, 0);
-                //setMotorVel(&RightMotor,0);
-                rightReached = true;
-            }
 
-            if (getMotorError(&RightMotor)) {
-                clearMotorErrors(&RightMotor);
-                int resetCounts = R_distance * COUNTS_PER_CENTI - RightMotor.Position;
-                setMotorCounts(&RightMotor, resetCounts);
-
+                setMotor_Vel(0, 0);
+                DriveMacroState = Initialization;
+                return true;
+            } else {
+                return false;
             }
-            if (getMotorError(&LeftMotor)) {
-                clearMotorErrors(&LeftMotor);
-                int resetCounts = -L_distance * COUNTS_PER_CENTI - LeftMotor.Position;
-                setMotorCounts(&LeftMotor, resetCounts);
-            }
-        }
+            break;
     }
 
-    //setPinState(&GyroPin2,0);
 
-    //set back to velocity mode    
-    setMotorControlMode(&LeftMotor, Velocity, 0);
-    setMotorControlMode(&RightMotor, Velocity, 0);
-
-    setMotor_Vel(0, 0);
-    //delay(1000);
 }
+
 
 //Send a number of centimeters to travel, let 'em go
 

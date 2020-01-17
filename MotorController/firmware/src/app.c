@@ -57,7 +57,7 @@ void APP_Initialize(void) {
     initCANISRs();
     initCANFT();
     DRV_CAN0_Open();
-    
+
     initGlobalData(DEVICE_STATUS, getLoadedState, 500);
     initGlobalData(DEVICE_MACRO, getRunningMacros, 500);
 
@@ -79,8 +79,8 @@ void APP_Initialize(void) {
     setMotorControlMode(&RightMotor, Velocity, 0);
     setMotorControlMode(&LeftMotor, Velocity, 0);
     isLoaded = true;
-//     setMotorVel(&DrumMotor, 4000);
-//     while(1);
+
+
 }
 /******************************************************************************
   Function:
@@ -131,8 +131,7 @@ void APP_Tasks(void) {
                 runMacros();
             } else {
                 handleManualControl(getManualDriveSpeed(), getManualArmSpeed(), getManualBucketSpeed(), 0);
-                 
-                
+
             }
             appData.state = APP_STATE_AWAITING_RESPONSE;
             break;

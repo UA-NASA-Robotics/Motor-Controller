@@ -144,7 +144,7 @@
           <itemPath>../src/CAN_Handler/CAN.c</itemPath>
         </logicalFolder>
         <logicalFolder name="f4" displayName="Macro_Handler" projectFiles="true">
-          <itemPath>../src/Macro_Handler/Macro_Mgr.c</itemPath>
+          <itemPath>../../../../Master-Controller/NaviController/firmware/src/Macro_Handler/Macro_Mgr.c</itemPath>
         </logicalFolder>
         <logicalFolder name="f2" displayName="MotorSystems" projectFiles="true">
           <itemPath>../src/motorHandler.c</itemPath>
@@ -251,6 +251,7 @@
     <Elem>..\src\default</Elem>
     <Elem>..\src\system_config\default</Elem>
     <Elem>../../../../MasterControler/NaviController/firmware/src</Elem>
+    <Elem>../../../../Master-Controller/NaviController/firmware/src/Macro_Handler</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -399,7 +400,7 @@
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>
         <property key="make-warnings-into-errors" value="false"/>
-        <property key="optimization-level" value="-O1"/>
+        <property key="optimization-level" value=""/>
         <property key="place-data-into-section" value="false"/>
         <property key="post-instruction-scheduling" value="default"/>
         <property key="pre-instruction-scheduling" value="default"/>

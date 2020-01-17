@@ -11,7 +11,7 @@
 #ifdef	__cplusplus
 extern "C" {
 #endif
-
+#include <stdbool.h>
 #define GLOBAL_DEVICES 10
 #define GLOBAL_DATA_IDX_PER_DEV 7
 #ifndef GBL_ADDRESS
@@ -28,6 +28,7 @@ typedef enum {
     OPTICAL_FLOW,
     RASPBERRY_PI,
     LED_CARD,
+            LIDAR,
     GLOBAL_ADDRESS = 31
 } Addresses_t;
 #endif

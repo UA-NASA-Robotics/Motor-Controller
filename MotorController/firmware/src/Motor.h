@@ -19,7 +19,7 @@ void initMotors();
 void MotorsAllStop();
 void setMotor_Vel(int leftSpeed,int rightSpeed);
 void requestMotorData(Motor_t * motor, int dataRequested);
-void handleManualControl(uint16_t _driveMotorSpeed,uint16_t _speed1,uint16_t _speed2,uint16_t _speed3);
+void handleManualControl(int16_t _driveMotorSpeed,int16_t _speed1,int16_t _speed2,int16_t _speed3);
 
 #endif	/* MOTOR_H */
 

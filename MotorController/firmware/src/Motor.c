@@ -125,23 +125,18 @@ void requestMotorData(Motor_t * motor, int dataRequested) {
 int Lspeed;
 int Rspeed;
 timers_t MotorUpdate;
-
-void handleManualControl(uint16_t _driveMotorSpeed, uint16_t _speed1, uint16_t _speed2, uint16_t _speed3) {
+int speed;
+void handleManualControl(int16_t _driveMotorSpeed, int16_t _speed1, int16_t _speed2, int16_t _speed3) {
     setTimerInterval(&MotorUpdate, 10);
     if (timerDone(&MotorUpdate)) {
         // Sets the speed of the drive motors on the Robot
-        Lspeed = ((signed char) (_driveMotorSpeed & 0xFF))*40;
-        Rspeed = ((signed char) ((_driveMotorSpeed >> 8) & 0xFF))*40;
+        Lspeed = -((signed char) (_driveMotorSpeed & 0xFF))*40;
+        Rspeed = -((signed char) ((_driveMotorSpeed >> 8) & 0xFF))*40;
         setMotor_Vel(Lspeed, Rspeed);
-        if (abs(_speed1) > 5) {
-            setMotorVel(&ArmMotor, _speed1 / 2);
-            /* We need a different amount of current for the different directions*/
-            if (((signed char) _speed1) > 0) {
-                setMotorCurrent(&ArmMotor, 3000 * (abs(_speed1) / ((signed char) _speed1)));
-            } else {
-                setMotorVel(&ArmMotor, 100);
-                setMotorCurrent(&ArmMotor, 1000 * (abs(_speed1) / ((signed char) _speed1)));
-            }
+        speed = _speed1;
+        if (abs(_speed1) > 6) {
+            setMotorVel(&ArmMotor, _speed1);
+            setMotorCurrent(&ArmMotor, 30*_speed1);
         } else {
             setMotorVel(&ArmMotor, 0);
             setMotorCurrent(&ArmMotor, 0);

@@ -9,6 +9,7 @@
 #include "Definitions.h"
 #include "ArcDriveMacro.h"
 #include "Timers.h"
+#include "motorHandler.h"
 #include "CAN_Handler/CANFastTransfer.h"
 #include "Macro_Handler/Macro_Mgr.h"
 #include <stdlib.h>
@@ -27,7 +28,7 @@
 PFI getMacroHandler(unsigned char _macroID);
 
 
-timers_t voidTime,voidTime2;
+timers_t voidTime, voidTime2;
 
 bool Dummy(int val) {
     if (voidTime.timerInterval != val) {
@@ -35,12 +36,14 @@ bool Dummy(int val) {
     }
     return timerDone(&voidTime);
 }
+
 bool Dummy2(int val) {
     if (voidTime2.timerInterval != val) {
         setTimerInterval(&voidTime2, val);
     }
     return timerDone(&voidTime2);
 }
+int data;
 
 void handleMacroStatus() {
     ReceiveDataCAN(FT_GLOBAL);
@@ -50,14 +53,20 @@ void handleMacroStatus() {
 
         int macroID = getCANFastData(FT_GLOBAL, getGBL_MACRO_INDEX(ROUTER_CARD));
         int macroDATA = getCANFastData(FT_GLOBAL, getGBL_MACRO_INDEX(ROUTER_CARD) + 1);
+        data = macroDATA;
         if (macroID == 0) {
             clearMacros();
+            setMotorControlMode(&LeftMotor, Velocity, 0);
+            setMotorControlMode(&RightMotor, Velocity, 0);
+
+            setMotor_Vel(0, 0);
+            resetDriveStates();
+
         } else {
             /* Add the macro to the queue*/
             switch (macroID) {
                 case DRIVE_MACRO:
-                    setMacroCallback(Dummy, 5000, DRIVE_MACRO);
-                    setMacroCallback(Dummy2, 15000, dumbMac1);
+                    setMacroCallback(driveDist, data, DRIVE_MACRO);
                     break;
                 default:
                     break;
@@ -98,8 +107,6 @@ void updateMacroCommunications(void) {
         continueTheMacro = false;
     }
 }
-
-
 
 void processMacro(uint8_t performMacro, int macroData) {
     continueTheMacro = true;
