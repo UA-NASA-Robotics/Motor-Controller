@@ -15,6 +15,8 @@
 #define LED3 LATEbits.LATE7
 #define LED4 LATGbits.LATG6
 
+#define RAD_TO_DEGREE   57.2957795
+
 #define MY_ADDRESS     MOTOR_CONTROLLER //THE CAN FILTER WILL BE 0x7fc1 (Address 1)
 
 #define UART_MACRO_RESPONCE
@@ -25,8 +27,16 @@
 #define DrumLS_ACTIVE   0
 #define DrumLS_NotActive   1
 
-//#define REVERSE_DRIVE_DIRECTION 
 
+
+#define CAN_COMMAND_INDEX      8
+#define CAN_COMMAND_DATA_INDEX  9
+
+//#define REVERSE_DRIVE_DIRECTION 
+typedef struct{
+    double x;
+    double y;
+}point_t;
 #ifndef DATA_T
 #define DATA_T
 
@@ -36,13 +46,14 @@ typedef struct {
 } Data_t;
 
 
+
+
+#endif
 // FT_LOCAL CAN address
 typedef enum{
     DRIVE_SPEED=1,
     ARM_SPEED=3,
     BUCKET_SPEED
 }CANaddr_t;
-#endif
-
 #endif	/* DEFINITIONS_H */
 

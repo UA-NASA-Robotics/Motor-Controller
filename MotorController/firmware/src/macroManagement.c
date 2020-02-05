@@ -12,9 +12,11 @@
 #include "motorHandler.h"
 #include "CAN_Handler/CANFastTransfer.h"
 #include "Macro_Handler/Macro_Mgr.h"
+#include "Motor.h"
 #include <stdlib.h>
 #include <stdio.h>
 #define DRIVE_MACRO         (uint16_t)(1 << 10)
+#define AUTO_DRIVE_MACRO    (uint16_t)(1 << 11)
 #define ARC_DRIVE_MACRO     4
 #define DIGGING_MACRO       5
 #define DUMPING_MACRO       6
@@ -47,39 +49,48 @@ int data;
 
 void handleMacroStatus() {
     ReceiveDataCAN(FT_GLOBAL);
-
+    ReceiveDataCAN(FT_LOCAL);
     /* If a macro is seen on the global bus from the router card*/
     if (getNewDataFlagStatus(FT_GLOBAL, getGBL_MACRO_INDEX(ROUTER_CARD))) {
-
         int macroID = getCANFastData(FT_GLOBAL, getGBL_MACRO_INDEX(ROUTER_CARD));
         int macroDATA = getCANFastData(FT_GLOBAL, getGBL_MACRO_INDEX(ROUTER_CARD) + 1);
-        data = macroDATA;
-        if (macroID == 0) {
-            clearMacros();
-            setMotorControlMode(&LeftMotor, Velocity, 0);
-            setMotorControlMode(&RightMotor, Velocity, 0);
-
-            setMotor_Vel(0, 0);
-            resetDriveStates();
-
-        } else {
-            /* Add the macro to the queue*/
-            switch (macroID) {
-                case DRIVE_MACRO:
-                    setMacroCallback(driveDist, data, DRIVE_MACRO);
-                    break;
-                default:
-                    break;
-            }
-
-        }
+        handleCANmacro(macroID, macroDATA);
     }
-    if (ReceiveDataCAN(FT_LOCAL)) {
+    if (getNewDataFlagStatus(FT_LOCAL, CAN_COMMAND_INDEX)) {
 
+        int macroID = getCANFastData(FT_LOCAL, CAN_COMMAND_INDEX);
+        int macroDATA = getCANFastData(FT_LOCAL, CAN_COMMAND_DATA_INDEX);
+        handleCANmacro(macroID, macroDATA);
     }
 
 }
 
+void handleCANmacro(short _macroID, short _macroDATA) {
+    if (_macroID == 0) {
+        clearMacros();
+        setMotorControlMode(&LeftMotor, Velocity, 0);
+        setMotorControlMode(&RightMotor, Velocity, 0);
+
+        setMotor_Vel(0, 0);
+        resetDriveStates();
+
+    } else {
+        /* Add the macro to the queue*/
+        switch (_macroID) {
+            case DRIVE_MACRO:
+                if(setMacroCallback(driveDist, _macroDATA, DRIVE_MACRO))
+                    resetDriveStates();
+                break;
+            case AUTO_DRIVE_MACRO:
+                 if(setMacroCallback(drive2Point, (20 << 8 | 10), AUTO_DRIVE_MACRO))
+                    resetDriveStates();
+                break;
+            default:
+                break;
+        }
+
+    }
+}
 
 
 
@@ -89,14 +100,17 @@ void finishMacro(void);
 bool continueTheMacro = false;
 
 bool continueMacro(void) {
+
     return continueTheMacro;
 }
 
 void setContinueMacroState(bool state) {
+
     continueTheMacro = state;
 }
 
 void initMacroCommunications(void) {
+
     continueTheMacro = false;
     MasterFT.ReceivedData[8] = 0;
 }
@@ -104,6 +118,7 @@ void initMacroCommunications(void) {
 void updateMacroCommunications(void) {
     receiveData(&MasterFT);
     if (MasterFT.ReceivedData[8] == 0) {
+
         continueTheMacro = false;
     }
 }
@@ -123,6 +138,7 @@ void processMacro(uint8_t performMacro, int macroData) {
             break;
         case ARC_DRIVE_MACRO:
             ArcDrive(MasterFT.ReceivedData[9], MasterFT.ReceivedData[10], MasterFT.ReceivedData[11], MasterFT.ReceivedData[12], MasterFT.ReceivedData[13]);
+
             break;
         case ZERO_SYSTEMS:
             break;

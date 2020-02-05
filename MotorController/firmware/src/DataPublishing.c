@@ -39,3 +39,8 @@ bool publishData() {
     return validData;
 }
 
+void publishDataIndex(int _index) {
+    //Send the data on the can bus
+    ToSendCAN(_index + DATA_ELEMENTS_COUNT*MOTOR_CONTROLLER, (dataRetrievalFunc[_index])());
+    sendDataCAN(GLOBAL_ADDRESS);
+}

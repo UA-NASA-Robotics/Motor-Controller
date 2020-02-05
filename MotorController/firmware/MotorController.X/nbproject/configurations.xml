@@ -144,7 +144,7 @@
           <itemPath>../src/CAN_Handler/CAN.c</itemPath>
         </logicalFolder>
         <logicalFolder name="f4" displayName="Macro_Handler" projectFiles="true">
-          <itemPath>../../../../Master-Controller/NaviController/firmware/src/Macro_Handler/Macro_Mgr.c</itemPath>
+          <itemPath>../src/Macro_Handler/Macro_Mgr.c</itemPath>
         </logicalFolder>
         <logicalFolder name="f2" displayName="MotorSystems" projectFiles="true">
           <itemPath>../src/motorHandler.c</itemPath>

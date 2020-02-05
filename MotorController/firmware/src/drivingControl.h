@@ -18,6 +18,7 @@
 #ifndef _DRIVING_CONTROL_H    /* Guard against multiple inclusion */
 #define _DRIVING_CONTROL_H
 void resetDriveStates();
+bool drive2Point(int val);
 bool driveDist(int _distance);
 bool driveDistance(int _distance,int _speed);
 bool driveSeperatDistances(int L_distance,int R_distance, int L_speed, int R_speed);

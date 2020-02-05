@@ -130,7 +130,8 @@ void APP_Tasks(void) {
             if (getRunningMacros() != 0) {
                 runMacros();
             } else {
-                handleManualControl(getManualDriveSpeed(), getManualArmSpeed(), getManualBucketSpeed(), 0);
+                if (getNewDataFlagStatus(FT_LOCAL, DRIVE_SPEED) || getNewDataFlagStatus(FT_LOCAL, ARM_SPEED) || getNewDataFlagStatus(FT_LOCAL, BUCKET_SPEED))
+                    handleManualControl(getManualDriveSpeed(), getManualArmSpeed(), getManualBucketSpeed(), 0);
 
             }
             appData.state = APP_STATE_AWAITING_RESPONSE;

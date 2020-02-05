@@ -22,6 +22,7 @@
 #include <stdint.h>
 
 void handleMacroStatus();
+void handleCANmacro(short _macroID, short _macroDATA);
 bool continueMacro(void);
 void setContinueMacroState(bool state);
 void initMacroCommunications(void);

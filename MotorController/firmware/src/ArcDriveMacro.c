@@ -2,6 +2,7 @@
 #include "motorHandler.h"
 #include "drivingControl.h"
 #include <math.h>
+#include "Definitions.h"
 #define pi 3.14159
 #define DEG_TO_RAD  0.017453292
 

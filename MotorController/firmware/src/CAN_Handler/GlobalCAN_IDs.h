@@ -12,6 +12,7 @@
 extern "C" {
 #endif
 #include <stdbool.h>
+#include "CANFastTransfer.h"
 #define GLOBAL_DEVICES 10
 #define GLOBAL_DATA_IDX_PER_DEV 7
 #ifndef GBL_ADDRESS
@@ -48,6 +49,7 @@ typedef enum {
 
 #define getGBL_DEVICE_STATUS(c) c*GLOBAL_DATA_IDX_PER_DEV + DEVICE_STATUS
 #define getGBL_MACRO_INDEX(c) c*GLOBAL_DATA_IDX_PER_DEV + DEVICE_MACRO
+#define getGBL_Data(c,d) c*GLOBAL_DATA_IDX_PER_DEV + d
 
 volatile int receiveArrayCAN_Global[GLOBAL_DEVICES*GLOBAL_DATA_IDX_PER_DEV +1];
 volatile bool GBL_CAN_FT_recievedFlag[GLOBAL_DEVICES*GLOBAL_DATA_IDX_PER_DEV +1];

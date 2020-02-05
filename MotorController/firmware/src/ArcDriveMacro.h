@@ -7,14 +7,11 @@
 
 #ifndef ARCDRIVEMACRO_H
 #define	ARCDRIVEMACRO_H
-
+#include "Definitions.h"
 #ifdef	__cplusplus
 extern "C" {
 #endif
-typedef struct{
-    double x;
-    double y;
-}point_t;
+
 
 typedef struct {
     point_t StartPoint;

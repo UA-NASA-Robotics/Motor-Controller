@@ -26,7 +26,7 @@ typedef enum {
 	DATA_4
 } GlobalDeviceData_t;
 #endif
-
+void publishDataIndex(int _index);
     /** \brief (initGlobalData): Initializes the data publishing values to be put on the can bus at a particular interval
      *
      * \param (_interval):  what is the index in the "memory" that is sent out
