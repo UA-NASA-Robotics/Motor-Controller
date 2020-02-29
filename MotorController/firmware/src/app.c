@@ -58,7 +58,7 @@ void APP_Initialize(void) {
     initCANFT();
     DRV_CAN0_Open();
 
-    initGlobalData(DEVICE_STATUS, getLoadedState, 500);
+    initGlobalData(DEVICE_STATUS, getLoadedState, 1000);
     initGlobalData(DEVICE_MACRO, getRunningMacros, 500);
 
     initMotors();
@@ -67,8 +67,8 @@ void APP_Initialize(void) {
     //    InitUARTModule(&MasterUart,UART_Master);
     //    InitUARTModule(&GyroUart,UART_Gyro);
 
-    InitFastTransferModule(&MasterFT, UART_Master, MY_ADDRESS, Send_put, Buffer_Get, Buffer_Size, Buffer_Peek);
-    InitFastTransferModule(&GyroFT, UART_Gyro, MY_ADDRESS, Send_put, Buffer_Get, Buffer_Size, Buffer_Peek);
+    //InitFastTransferModule(&MasterFT, UART_Master, MY_ADDRESS, Send_put, Buffer_Get, Buffer_Size, Buffer_Peek);
+    //InitFastTransferModule(&GyroFT, UART_Gyro, MY_ADDRESS, Send_put, Buffer_Get, Buffer_Size, Buffer_Peek);
 
 
     delay(1000);
@@ -126,7 +126,6 @@ void APP_Tasks(void) {
         {
             // add any received macros to the macro queue
             handleMacroStatus();
-            ReceiveDataCAN(FT_LOCAL);
             if (getRunningMacros() != 0) {
                 runMacros();
             } else {

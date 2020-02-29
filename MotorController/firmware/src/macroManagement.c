@@ -15,6 +15,7 @@
 #include "Motor.h"
 #include <stdlib.h>
 #include <stdio.h>
+#define STOP_MACRO          0
 #define DRIVE_MACRO         (uint16_t)(1 << 10)
 #define AUTO_DRIVE_MACRO    (uint16_t)(1 << 11)
 #define ARC_DRIVE_MACRO     4
@@ -45,51 +46,54 @@ bool Dummy2(int val) {
     }
     return timerDone(&voidTime2);
 }
-int data;
 
 void handleMacroStatus() {
     ReceiveDataCAN(FT_GLOBAL);
     ReceiveDataCAN(FT_LOCAL);
+    int macroID;
+    int macroDATA;
     /* If a macro is seen on the global bus from the router card*/
     if (getNewDataFlagStatus(FT_GLOBAL, getGBL_MACRO_INDEX(ROUTER_CARD))) {
-        int macroID = getCANFastData(FT_GLOBAL, getGBL_MACRO_INDEX(ROUTER_CARD));
-        int macroDATA = getCANFastData(FT_GLOBAL, getGBL_MACRO_INDEX(ROUTER_CARD) + 1);
+        macroID = getCANFastData(FT_GLOBAL, getGBL_MACRO_INDEX(ROUTER_CARD));
+        macroDATA = getCANFastData(FT_GLOBAL, getGBL_MACRO_INDEX(ROUTER_CARD) + 1);
         handleCANmacro(macroID, macroDATA);
     }
     if (getNewDataFlagStatus(FT_LOCAL, CAN_COMMAND_INDEX)) {
 
-        int macroID = getCANFastData(FT_LOCAL, CAN_COMMAND_INDEX);
-        int macroDATA = getCANFastData(FT_LOCAL, CAN_COMMAND_DATA_INDEX);
+        macroID = getCANFastData(FT_LOCAL, CAN_COMMAND_INDEX);
+        macroDATA = getCANFastData(FT_LOCAL, CAN_COMMAND_DATA_INDEX);
         handleCANmacro(macroID, macroDATA);
     }
 
 }
-
+short macData;
 void handleCANmacro(short _macroID, short _macroDATA) {
-    if (_macroID == 0) {
-        clearMacros();
-        setMotorControlMode(&LeftMotor, Velocity, 0);
-        setMotorControlMode(&RightMotor, Velocity, 0);
 
-        setMotor_Vel(0, 0);
-        resetDriveStates();
+    /* Add the macro to the queue*/
+    switch (_macroID) {
+        case STOP_MACRO:
+            clearMacros();
+            //        setMotorControlMode(&LeftMotor, Velocity, 0);
+            //        setMotorControlMode(&RightMotor, Velocity, 0);
 
-    } else {
-        /* Add the macro to the queue*/
-        switch (_macroID) {
-            case DRIVE_MACRO:
-                if(setMacroCallback(driveDist, _macroDATA, DRIVE_MACRO))
-                    resetDriveStates();
-                break;
-            case AUTO_DRIVE_MACRO:
-                 if(setMacroCallback(drive2Point, (20 << 8 | 10), AUTO_DRIVE_MACRO))
-                    resetDriveStates();
-                break;
-            default:
-                break;
-        }
+            setMotor_Vel(0, 0);
+            resetDriveStates();
+            break;
+        case DRIVE_MACRO:
+            
+            if (setMacroCallback(driveDist, _macroDATA, DRIVE_MACRO))
+                resetDriveStates();
+            break;
+        case AUTO_DRIVE_MACRO:
+            macData = _macroDATA;
+            setMacroCallback(drive2Point, macData, AUTO_DRIVE_MACRO);
 
+            break;
+        default:
+            break;
     }
+
+
 }
 
 

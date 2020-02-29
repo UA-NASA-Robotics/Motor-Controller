@@ -48,60 +48,75 @@ void getNewPIDvals(point_t _destPoint, double *_drivePID, double *_headingPID) {
     *_headingPID = heading;
     *_drivePID = sqrt((double) (_destPoint.x * myLoc.x) + (double) (_destPoint.y * myLoc.y));
 }
-int x, y;
 int Lspeed, Rspeed, Hval, Dval;
 double heading = 0;
 point_t _destPoint;
- point_t pointFrom ;
- int distance;
+point_t pointFrom;
+int distance;
+timers_t transTime;
+int distanceBuf[10], DistHead = 0;
+int val2;
+int x,y;
 bool drive2Point(int val) {
     double headingVal, DriveVal;
+     x = ((val >> 8)&0xFF);
+    y = (val & 0xFF);
+    val2 = val;
     _destPoint = (point_t){((double) ((val >> 8)&0xFF)), (double) (val & 0xFF)};
-
+   
     switch (DriveMacroState) {
 
         case Initialization:
-
-            getNewPIDvals(_destPoint, &DriveVal, &headingVal);
-
-            INIT_PID(&headingPID, 0, 6, 0, 0);
+            setTimerInterval(&transTime, 50);
+            //
+            //            getNewPIDvals(_destPoint, &DriveVal, &headingVal);
+            //            setMotorControlMode(&LeftMotor, Velocity, 0);
+            //            setMotorControlMode(&RightMotor, Velocity, 0);
+            INIT_PID(&headingPID, 0, 8, 0, 0);
             // The goal for the drive is to have the distance between the current
             // location and the destination to be zero
-            INIT_PID(&DrivePID, 0, 12, 0, 0);
+            INIT_PID(&DrivePID, 0, 22, 0, 0);
+            setPID_MIN(&DrivePID, 400);
             DriveMacroState = Drive;
             break;
         case Drive:
+
             // Parsing Received information
             ReceiveDataCAN(FT_GLOBAL);
             // getting the information form global received array
             myHeading = getCANFastData(FT_GLOBAL, getGBL_Data(MASTER_CONTROLLER, DATA_3));
-            x = (getCANFastData(FT_GLOBAL, getGBL_Data(MASTER_CONTROLLER, DATA_0)));
-            y = (getCANFastData(FT_GLOBAL, getGBL_Data(MASTER_CONTROLLER, DATA_1)));
             // making the current point to be in 10*cm scale
-            pointFrom = (point_t){(double)(x)/100.0, ((double)y/100.0)};
+            pointFrom = (point_t){(double) (getCANFastData(FT_GLOBAL, getGBL_Data(MASTER_CONTROLLER, DATA_0))) / 100.0,
+                ((double) getCANFastData(FT_GLOBAL, getGBL_Data(MASTER_CONTROLLER, DATA_1)) / 100.0)};
             // this is the current heading of the robot
             DriveVal = sqrt(pow(_destPoint.x - pointFrom.x, 2) + pow((_destPoint.y - pointFrom.y), 2));
-            if(DriveVal < 2.5){
-                setMotor_Vel(0,0);
-                delay(100);
-                setMotor_Vel(0,0);
+            if (DriveVal < 2.5) {
+                setMotorControlMode(&LeftMotor, Velocity, 0);
+                setMotorControlMode(&RightMotor, Velocity, 0);
+                setMotor_Vel(0, 0);
+                DriveMacroState = Initialization;
                 return true;
             }
+
+
             Dval = updateOutput(&DrivePID, (float) DriveVal);
-            
-            
-            heading = 270.0 - (atan2((double) (_destPoint.x - pointFrom.x), (double) (_destPoint.y - pointFrom.y)) * RAD_TO_DEGREE + 180.0);
-            if (heading < 0) heading += 360;
+            if (timerDone(&transTime)) {
+                // Get the heading from current location to the destination point in 0->360 that matches the scale everywhere else
+                heading = 270.0 - (atan2((double) (_destPoint.x - pointFrom.x), (double) (_destPoint.y - pointFrom.y)) * RAD_TO_DEGREE + 180.0);
+                if (heading < 0) heading += 360;
 
-            int phi = abs(myHeading - (int) heading); // This is either the distance or 360 - distance
-            distance = phi > 180 ? (360 - phi) : (myHeading - (int) heading);
-            Hval = updateOutput(&headingPID, (float) distance);
+                int phi = abs(myHeading - (int) heading); // This is either the distance or 360 - distance
+                distance = phi > 180 ? (360 - phi) : (myHeading - (int) heading);
+                bufPutValCustom(distanceBuf, &DistHead, distance, sizeof (distanceBuf));
+                distance = getBufAVG(distanceBuf, sizeof (distanceBuf));
+                Hval = updateOutput(&headingPID, (float) distance);
 
-            
-            Lspeed = Dval*(-1) - Hval;
-            Rspeed = Dval*(-1) + Hval;
 
-            setMotor_Vel(Lspeed, Rspeed);
+                Lspeed = Dval * (-1) - Hval;
+                Rspeed = Dval * (-1) + Hval;
+
+                setMotor_Vel(Lspeed, Rspeed);
+            }
             break;
     }
     return false;
@@ -109,11 +124,14 @@ bool drive2Point(int val) {
 
 void resetDriveStates() {
     DriveMacroState = Initialization;
-    setMotor_Vel(0,0);
 }
 
 bool driveDist(int _distance) {
-    return driveDistance(_distance, 1000);
+    if (driveDistance(_distance, 1000)) {
+        resetDriveStates();
+        return true;
+    }
+    return false;
 }
 
 //Send a number of centimeters for each tred to travel, let 'em go

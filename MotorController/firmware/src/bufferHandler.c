@@ -190,3 +190,20 @@ my_can_packet_t generateEmptyPacket(void)
     wipePacket.messageContents[7] = 0;
     return wipePacket;
 }
+
+void bufPutValCustom(int *arr, int *head, int val,int MAXVAL)
+{
+    arr[(*head)++] = val;
+    if((*head) >= MAXVAL)
+        (*head) = 0;
+}
+int getBufAVG(int *arr, int MAXVAL)
+{
+    int i;
+    long long sum = 0;
+    for(i = 0; i < MAXVAL; i++)
+    {
+        sum += arr[i];
+    }
+    return (sum/MAXVAL);
+}

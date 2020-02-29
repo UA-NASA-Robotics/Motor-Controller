@@ -80,6 +80,9 @@ my_can_packet_t CANbufGet(my_can_buffer_t * canBuf);
 unsigned int buff_get_tail_index(my_can_buffer_t * canBuf);
 unsigned int buff_get_head_index(my_can_buffer_t * canBuf);
 unsigned int buff_get_last_index(my_can_buffer_t * canBuf);
+// Custom Buffer Stuff
+void bufPutValCustom(int *arr, int *head, int val,int MAXVAL);
+int getBufAVG(int *arr, int MAXVAL);
 
 #endif	/* BUFFERHANDLER_H */
 //#endif	/* BUFFERHANDLER_H */

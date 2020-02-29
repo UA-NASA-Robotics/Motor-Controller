@@ -127,7 +127,7 @@ int Rspeed;
 timers_t MotorUpdate;
 int speed;
 void handleManualControl(int16_t _driveMotorSpeed, int16_t _speed1, int16_t _speed2, int16_t _speed3) {
-    setTimerInterval(&MotorUpdate, 10);
+    setTimerInterval(&MotorUpdate, 100);
     if (timerDone(&MotorUpdate)) {
         // Sets the speed of the drive motors on the Robot
         Lspeed = -((signed char) (_driveMotorSpeed & 0xFF))*40;

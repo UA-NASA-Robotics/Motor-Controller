@@ -17,6 +17,7 @@ typedef struct
 {
     float _kp, _ki, _kd;
     float _dt;
+    float max, min;
     float _output;
     float _lastOutput;
     float _error,_prevError,_dError;
@@ -33,7 +34,8 @@ void INIT_PID(PID_Struct_t* _this,float target, float kp, float ki, float kd);
 This is where you will declare all of the methods
 that will be able to be called by other segments of code externally
 ******************************************************************/
-
+void setPID_MAX(PID_Struct_t *_this,float val);
+void setPID_MIN(PID_Struct_t *_this,float val);
 int updateOutput(PID_Struct_t *_this, float sample);
 void setPropotionality(PID_Struct_t *_this, float kp, float ki, float kd);
 void clearIntegral(PID_Struct_t *_this);

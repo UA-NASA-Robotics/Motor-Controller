@@ -16,7 +16,14 @@ void INIT_PID(PID_Struct_t *_this,float target, float kp, float ki, float kd)
     _this->_past=millis();
     _this->_prevError=0;
 }
-
+void setPID_MAX(PID_Struct_t *_this,float val)
+{
+    _this->max = val;
+}
+void setPID_MIN(PID_Struct_t *_this,float val)
+{
+    _this->min = val;
+}
 //External method
 void setPropotionality(PID_Struct_t *_this, float kp, float ki, float kd)
 {
@@ -96,6 +103,10 @@ int updateOutput(PID_Struct_t *_this, float sample)
     }
     _this->_lastOutput = _this->_output;
     _this->_prevError = _this->_error;
+    if(_this->_output < _this->min && _this->_output > 0)
+        _this->_output = _this->min;
+    if(-_this->_output < _this->min && _this->_output < 0)
+        _this->_output = -_this->min;
     return _this->_output;
 }
 
