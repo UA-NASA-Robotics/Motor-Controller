@@ -80,7 +80,6 @@ void APP_Initialize(void) {
     setMotorControlMode(&LeftMotor, Velocity, 0);
     isLoaded = true;
 
-
 }
 /******************************************************************************
   Function:
@@ -134,6 +133,9 @@ void APP_Tasks(void) {
 
             }
             appData.state = APP_STATE_AWAITING_RESPONSE;
+            if (getCANFastData(FT_GLOBAL, getGBL_Data(POZYX,DATA_0)) > 0) {
+                LED1 ^= 1;
+            }
             break;
         }
             //This is for waiting for an interrupt pin response

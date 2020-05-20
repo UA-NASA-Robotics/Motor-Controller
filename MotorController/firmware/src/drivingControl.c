@@ -84,10 +84,10 @@ bool drive2Point(int val) {
             // Parsing Received information
             ReceiveDataCAN(FT_GLOBAL);
             // getting the information form global received array
-            myHeading = getCANFastData(FT_GLOBAL, getGBL_Data(MASTER_CONTROLLER, DATA_3));
+            myHeading = getCANFastData(FT_GLOBAL, getGBL_Data(POZYX, DATA_3));
             // making the current point to be in 10*cm scale
-            pointFrom = (point_t){(double) (getCANFastData(FT_GLOBAL, getGBL_Data(MASTER_CONTROLLER, DATA_0))) / 100.0,
-                ((double) getCANFastData(FT_GLOBAL, getGBL_Data(MASTER_CONTROLLER, DATA_1)) / 100.0)};
+            pointFrom = (point_t){(double) (getCANFastData(FT_GLOBAL, getGBL_Data(POZYX, DATA_0))) / 100.0,
+                ((double) getCANFastData(FT_GLOBAL, getGBL_Data(POZYX, DATA_1)) / 100.0)};
             // this is the current heading of the robot
             DriveVal = sqrt(pow(_destPoint.x - pointFrom.x, 2) + pow((_destPoint.y - pointFrom.y), 2));
             if (DriveVal < 2.5) {
