@@ -14,6 +14,7 @@
 #include "PID.h"
 #include <math.h>
 #include "CAN_Handler/GlobalCAN_IDs.h"
+#include "bufferHandler.h"
 
 
 #define COUNTS_PER_CENTI 2910//3108//2797//3636
@@ -84,7 +85,7 @@ bool drive2Point(int val) {
             // Parsing Received information
             ReceiveDataCAN(FT_GLOBAL);
             // getting the information form global received array
-            myHeading = getCANFastData(FT_GLOBAL, getGBL_Data(POZYX, DATA_3));
+            myHeading = getCANFastData(FT_GLOBAL, getGBL_Data(POZYX, DATA_2));
             // making the current point to be in 10*cm scale
             pointFrom = (point_t){(double) (getCANFastData(FT_GLOBAL, getGBL_Data(POZYX, DATA_0))) / 100.0,
                 ((double) getCANFastData(FT_GLOBAL, getGBL_Data(POZYX, DATA_1)) / 100.0)};

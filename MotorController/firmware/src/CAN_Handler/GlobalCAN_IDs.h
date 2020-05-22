@@ -7,7 +7,7 @@
 
 #ifndef GLOBALCAN_IDS_H
 #define	GLOBALCAN_IDS_H
-
+#include <stdint.h>
 #ifdef	__cplusplus
 extern "C" {
 #endif
@@ -51,7 +51,7 @@ typedef enum {
 #define getGBL_MACRO_INDEX(c) c*GLOBAL_DATA_IDX_PER_DEV + DEVICE_MACRO
 #define getGBL_Data(c,d) c*GLOBAL_DATA_IDX_PER_DEV + d //c is device address, d is the index of the global data in that device's window
 
-volatile int receiveArrayCAN_Global[GLOBAL_DEVICES*GLOBAL_DATA_IDX_PER_DEV +1];
+volatile short receiveArrayCAN_Global[GLOBAL_DEVICES*GLOBAL_DATA_IDX_PER_DEV +1];
 volatile bool GBL_CAN_FT_recievedFlag[GLOBAL_DEVICES*GLOBAL_DATA_IDX_PER_DEV +1];
 
 #ifdef	__cplusplus

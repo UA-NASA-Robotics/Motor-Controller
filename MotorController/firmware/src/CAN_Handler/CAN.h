@@ -18,7 +18,7 @@
 #ifndef _CAN_H    /* Guard against multiple inclusion */
 #define _CAN_H
 
-#include "bufferHandler.h"
+#include "CANbufferHandler.h"
 #include <xc.h>
 #include <stdbool.h>
 #include <stdint.h>

@@ -2,6 +2,7 @@
 #include "CANbufferHandler.h"
 #include <stdint.h>
 
+unsigned int CAN_buff_modulo_inc(const unsigned int value, const unsigned int modulus);
 
 void buffer_put(ringBufCAN_t *_this, unsigned int towhere, unsigned int towhat) {
 
@@ -98,4 +99,106 @@ unsigned int buffer_modulo_inc(const unsigned int value, const unsigned int modu
 unsigned int buffer_GetCount(ringBufCAN_t* _this) {
 
     return _this->count;
+}
+
+
+//**************************************************************
+//                   CAN BUFFER FUNCTIONS
+//**************************************************************
+
+
+
+my_can_packet_t generateEmptyPacket(void);
+/*=========================Generic UART Functions=============================*/
+void CANwipeBuffer(my_can_buffer_t * canBuf)
+{
+    my_can_packet_t wipePacket = generateEmptyPacket();
+    int i=0;
+    for(i=0;i<CAN_BUFFER_PACKET_LENGTH;i++)
+    {
+        canBuf->buf[i]=wipePacket;
+    }
+    canBuf->head=0;
+    canBuf->tail=0;
+    canBuf->count=0;
+}
+
+void CANbufPut(my_can_buffer_t * canBuf, my_can_packet_t p)
+{
+     if (canBuf->count < CAN_BUFFER_PACKET_LENGTH)
+    {
+        canBuf->buf[canBuf->head] = p;
+        canBuf->head = CAN_buff_modulo_inc(canBuf->head, CAN_BUFFER_PACKET_LENGTH);
+        ++canBuf->count;
+    } 
+     else
+    {
+        canBuf->buf[canBuf->head] = p;
+        canBuf->head = CAN_buff_modulo_inc(canBuf->head, CAN_BUFFER_PACKET_LENGTH);
+        canBuf->tail = CAN_buff_modulo_inc(canBuf->tail, CAN_BUFFER_PACKET_LENGTH);
+
+    }
+}
+unsigned int buff_get_tail_index(my_can_buffer_t * canBuf)
+{
+    return canBuf->tail;
+}
+unsigned int buff_get_head_index(my_can_buffer_t * canBuf)
+{
+    return canBuf->head;
+}
+
+unsigned int buff_get_last_index(my_can_buffer_t * canBuf)
+{
+    if(canBuf->tail == 0)
+    {
+        return CAN_BUFFER_PACKET_LENGTH-2;
+    }
+    else
+    {
+        return canBuf->tail-1;
+    }
+}
+
+my_can_packet_t CANbufGet(my_can_buffer_t * canBuf)
+{
+    my_can_packet_t p;
+    if (canBuf->count > 0)
+    {
+        p = canBuf->buf[canBuf->tail];
+        canBuf->tail = CAN_buff_modulo_inc(canBuf->tail, CAN_BUFFER_PACKET_LENGTH);
+        --canBuf->count;
+    } 
+    else
+    {
+      
+        p =  generateEmptyPacket();
+    }
+    return (p);
+}
+
+my_can_packet_t generateEmptyPacket(void)
+{
+     my_can_packet_t wipePacket;
+    wipePacket.canChannel=0;
+    wipePacket.canAddress=0;
+    wipePacket.DLC_Code=0;
+    wipePacket.messageContents[0] = 0;
+    wipePacket.messageContents[1] = 0;
+    wipePacket.messageContents[2] = 0;
+    wipePacket.messageContents[3] = 0;
+    wipePacket.messageContents[4] = 0;
+    wipePacket.messageContents[5] = 0;
+    wipePacket.messageContents[6] = 0;
+    wipePacket.messageContents[7] = 0;
+    return wipePacket;
+}
+unsigned int CAN_buff_modulo_inc(const unsigned int value, const unsigned int modulus)
+{
+    unsigned int my_value = value + 1;
+    if (my_value >= modulus)
+    {
+        my_value = 0;
+    }
+    return (my_value);
 }

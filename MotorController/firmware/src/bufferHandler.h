@@ -15,23 +15,23 @@
 
 
 //#define StaticBuffers
-#define BufferSize 100
-
-#define CAN_BUFFER_PACKET_LENGTH 200  //Store 200 packets in the buffer
-
-typedef struct{
-    uint8_t canChannel;
-    uint16_t canAddress;
-    uint8_t DLC_Code;
-    uint8_t messageContents[8];
-}my_can_packet_t;
-
-typedef struct{
-    my_can_packet_t buf[CAN_BUFFER_PACKET_LENGTH];
-    uint16_t head;
-    uint16_t tail;
-    uint16_t count;
-}my_can_buffer_t;
+//#define BufferSize 100
+//
+//#define CAN_BUFFER_PACKET_LENGTH 200  //Store 200 packets in the buffer
+//
+//typedef struct{
+//    uint8_t canChannel;
+//    uint16_t canAddress;
+//    uint8_t DLC_Code;
+//    uint8_t messageContents[8];
+//}my_can_packet_t;
+//
+//typedef struct{
+//    my_can_packet_t buf[CAN_BUFFER_PACKET_LENGTH];
+//    uint16_t head;
+//    uint16_t tail;
+//    uint16_t count;
+//}my_can_buffer_t;
 
 typedef struct 
 {
@@ -74,12 +74,12 @@ uint8_t Buffer_Peek(RingBuffer_t* _this);
 void Buffer_Wipe(RingBuffer_t *ringBuffer);
 
 
-void CANwipeBuffer(my_can_buffer_t * canBuf);
-void CANbufPut(my_can_buffer_t * canBuf, my_can_packet_t p);
-my_can_packet_t CANbufGet(my_can_buffer_t * canBuf);
-unsigned int buff_get_tail_index(my_can_buffer_t * canBuf);
-unsigned int buff_get_head_index(my_can_buffer_t * canBuf);
-unsigned int buff_get_last_index(my_can_buffer_t * canBuf);
+//void CANwipeBuffer(my_can_buffer_t * canBuf);
+//void CANbufPut(my_can_buffer_t * canBuf, my_can_packet_t p);
+//my_can_packet_t CANbufGet(my_can_buffer_t * canBuf);
+//unsigned int buff_get_tail_index(my_can_buffer_t * canBuf);
+//unsigned int buff_get_head_index(my_can_buffer_t * canBuf);
+//unsigned int buff_get_last_index(my_can_buffer_t * canBuf);
 // Custom Buffer Stuff
 void bufPutValCustom(int *arr, int *head, int val,int MAXVAL);
 int getBufAVG(int *arr, int MAXVAL);

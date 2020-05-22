@@ -5,7 +5,7 @@
 #define LAST_BOARD_RECEIEVED 0
 
 
-void beginCANFast(volatile int * ptr, volatile bool *flagPtr, unsigned int maxSize, unsigned char givenAddress, FT_type_t _t);
+void beginCANFast(volatile short * ptr, volatile bool *flagPtr, unsigned int maxSize, unsigned char givenAddress, FT_type_t _t);
 void buffer_put(ringBufCAN_t *_this, unsigned int towhere, unsigned int towhat);
 
 void setNewDataFlag(FT_type_t _t, int index);
@@ -14,17 +14,17 @@ ringBufCAN_t transmit_buffer_CAN, send_buffer_CAN_FT, rx_buffer_CAN;
 ringBufCAN_t rx_buffer_CAN_Global;
 
 bool dataReceived[2] = {false,false};
-volatile int * receiveArrayAddressCAN[2];
+volatile short * receiveArrayAddressCAN[2];
 volatile bool * receiveArrayAddressCAN_Flag[2];
 unsigned char moduleAddressCAN[2];
 unsigned int MaxIndex[2];
-int receiveArrayCAN[10];
+short receiveArrayCAN[10];
 bool receiveArrayCAN_Flag[10];
 
 int newDataFlag = 0;
 int newDataFlag_Global[2];
 
-int * getReceiveArrayCAN(void) {
+short * getReceiveArrayCAN(void) {
     return receiveArrayCAN;
 }
 
@@ -33,7 +33,7 @@ void initCANFT(void) {
     beginCANFast(receiveArrayCAN_Global, GBL_CAN_FT_recievedFlag, sizeof (receiveArrayCAN_Global), GLOBAL_ADDRESS, FT_GLOBAL);
 }
 
-void beginCANFast(volatile int * ptr, volatile bool *flagPtr, unsigned int maxSize, unsigned char givenAddress, FT_type_t _t) {
+void beginCANFast(volatile short * ptr, volatile bool *flagPtr, unsigned int maxSize, unsigned char givenAddress, FT_type_t _t) {
 
     receiveArrayAddressCAN[_t] = ptr;
     receiveArrayAddressCAN_Flag[_t] = flagPtr;

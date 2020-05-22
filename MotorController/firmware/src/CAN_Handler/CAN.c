@@ -183,7 +183,7 @@ void CAN_ISR_CALLBACK(void) {
                     break;
             }
             //            printf("RXData: %d\r",dataCombination);
-            bool returnable = false;
+            //bool returnable = false;
             if(rx_message_requested[lastMessageIndexSent].rx_requested != NO_DATA_REQUESTED && rx_message_requested[lastMessageIndexSent].callback != NULL)
             {
                 ((Data_t*)(rx_message_requested[lastMessageIndexSent].callback))->data = dataCombination;

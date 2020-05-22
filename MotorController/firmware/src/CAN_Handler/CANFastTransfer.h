@@ -31,7 +31,7 @@ int GlobalAddressInturpret(int index);
 
 void initCANFT(void);
 int ReceiveDataCAN(FT_type_t _t);
-int * getReceiveArrayCAN(void);
+short * getReceiveArrayCAN(void);
 void ToSendCAN(unsigned int where, unsigned int what);
 void sendDataCAN(unsigned int whereToSend);
 void ReceiveCANFast(my_can_packet_t *p, FT_type_t _t); // interrupt callback
