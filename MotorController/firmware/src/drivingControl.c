@@ -49,8 +49,25 @@ void getNewPIDvals(point_t _destPoint, double *_drivePID, double *_headingPID) {
     *_headingPID = heading;
     *_drivePID = sqrt((double) (_destPoint.x * myLoc.x) + (double) (_destPoint.y * myLoc.y));
 }
+// Returns floor of square root of x 
+int floorSqrt(int x) 
+{ 
+    // Base cases 
+    if (x == 0 || x == 1) 
+    return x; 
+  
+    // Staring from 1, try all numbers until 
+    // i*i is greater than or equal to x. 
+    int i = 1, result = 1; 
+    while (result <= x) 
+    { 
+      i++; 
+      result = i * i; 
+    } 
+    return i - 1; 
+} 
 int Lspeed, Rspeed, Hval, Dval;
-double heading = 0;
+int heading = 0;
 point_t _destPoint;
 point_t pointFrom;
 int distance;
@@ -58,8 +75,9 @@ timers_t transTime;
 int distanceBuf[10], DistHead = 0;
 int val2;
 int x,y;
+ double headingVal, DriveVal;
 bool drive2Point(int val) {
-    double headingVal, DriveVal;
+   
      x = ((val >> 8)&0xFF);
     y = (val & 0xFF);
     val2 = val;
@@ -85,12 +103,13 @@ bool drive2Point(int val) {
             // Parsing Received information
             ReceiveDataCAN(FT_GLOBAL);
             // getting the information form global received array
-            myHeading = getCANFastData(FT_GLOBAL, getGBL_Data(POZYX, DATA_2));
+            myHeading = getCANFastData(FT_GLOBAL, getGBL_Data(GYRO_CONTROLLER, DATA_0));
             // making the current point to be in 10*cm scale
             pointFrom = (point_t){(double) (getCANFastData(FT_GLOBAL, getGBL_Data(POZYX, DATA_0))) / 100.0,
                 ((double) getCANFastData(FT_GLOBAL, getGBL_Data(POZYX, DATA_1)) / 100.0)};
             // this is the current heading of the robot
-            DriveVal = sqrt(pow(_destPoint.x - pointFrom.x, 2) + pow((_destPoint.y - pointFrom.y), 2));
+            val2 = pow(_destPoint.x - pointFrom.x, 2) + pow((_destPoint.y - pointFrom.y), 2);
+            DriveVal = floorSqrt((int)val2);
             if (DriveVal < 2.5) {
                 setMotorControlMode(&LeftMotor, Velocity, 0);
                 setMotorControlMode(&RightMotor, Velocity, 0);
@@ -103,18 +122,18 @@ bool drive2Point(int val) {
             Dval = updateOutput(&DrivePID, (float) DriveVal);
             if (timerDone(&transTime)) {
                 // Get the heading from current location to the destination point in 0->360 that matches the scale everywhere else
-                heading = 270.0 - (atan2((double) (_destPoint.x - pointFrom.x), (double) (_destPoint.y - pointFrom.y)) * RAD_TO_DEGREE + 180.0);
+                heading = 270 - (int)(atan2((double) (_destPoint.x - pointFrom.x), (double) (_destPoint.y - pointFrom.y)) * RAD_TO_DEGREE + 180.0);
                 if (heading < 0) heading += 360;
 
                 int phi = abs(myHeading - (int) heading); // This is either the distance or 360 - distance
-                distance = phi > 180 ? (360 - phi) : (myHeading - (int) heading);
-                bufPutValCustom(distanceBuf, &DistHead, distance, sizeof (distanceBuf));
-                distance = getBufAVG(distanceBuf, sizeof (distanceBuf));
+                distance = phi > 180 ? (360 - phi) : ((int)myHeading - (int)heading);
+                bufPutValCustom(distanceBuf, &DistHead, distance, sizeof (distanceBuf)/sizeof(int));
+                distance = getBufAVG(distanceBuf, sizeof (distanceBuf)/sizeof(int));
                 Hval = updateOutput(&headingPID, (float) distance);
 
 
-                Lspeed = Dval * (-1) - Hval;
-                Rspeed = Dval * (-1) + Hval;
+                Lspeed = Dval * (-1) + Hval;
+                Rspeed = Dval * (-1) - Hval;
 
                 setMotor_Vel(Lspeed, Rspeed);
             }
