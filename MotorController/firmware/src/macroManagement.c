@@ -162,7 +162,7 @@ void processMacro(uint8_t performMacro, int macroData) {
 
 void finishMacro(void) {
 #ifndef UART_MACRO_RESPONCE
-    togglePinState(&NaviPin1);
+    //togglePinState(&NaviPin1);
 
 #else
     ToSend(&MasterFT, 1, 1);

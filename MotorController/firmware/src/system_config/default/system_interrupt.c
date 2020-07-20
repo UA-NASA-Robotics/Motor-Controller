@@ -105,30 +105,6 @@ void __ISR(_UART4_FAULT_VECTOR, ipl5AUTO) _IntHandlerDrvUsartErrorInstance1(void
 
 
 
-void __ISR(_CHANGE_NOTICE_B_VECTOR, ipl1AUTO) _IntHandlerChangeNotification_PortB(void) {
-    if (getLoadedState()) {
-        pinChangeNotified();
-    }
-    PORTB;
-    PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_CHANGE_NOTICE_B);
-}
-
-void __ISR(_CHANGE_NOTICE_E_VECTOR, ipl1AUTO) _IntHandlerChangeNotification_PortE(void) {
-    if (getLoadedState()) {
-        pinChangeNotified();
-    }
-    PORTE;
-    PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_CHANGE_NOTICE_E);
-}
-
-void __ISR(_CHANGE_NOTICE_F_VECTOR, ipl1AUTO) _IntHandlerChangeNotification_PortF(void) {
-    if (getLoadedState()) {
-        pinChangeNotified();
-    }
-     PORTF;
-    PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_CHANGE_NOTICE_F);
-}
-
 void __ISR(_TIMER_1_VECTOR, ipl6AUTO) IntHandlerDrvTmrInstance0(void) {
     globalTimerTracker();
     PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_TIMER_1);
