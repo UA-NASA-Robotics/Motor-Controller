@@ -105,12 +105,12 @@ bool drive2Point(int val) {
             // getting the information form global received array
             myHeading = getCANFastData(FT_GLOBAL, getGBL_Data(GYRO_CONTROLLER, DATA_0));
             // making the current point to be in 10*cm scale
-            pointFrom = (point_t){(double) (getCANFastData(FT_GLOBAL, getGBL_Data(POZYX, DATA_0))) / 100.0,
-                ((double) getCANFastData(FT_GLOBAL, getGBL_Data(POZYX, DATA_1)) / 100.0)};
+            pointFrom = (point_t){(double) (getCANFastData(FT_GLOBAL, getGBL_Data(GYRO_CONTROLLER, DATA_1))) / 100.0,
+                ((double) getCANFastData(FT_GLOBAL, getGBL_Data(GYRO_CONTROLLER, DATA_2)) / 100.0)};
             // this is the current heading of the robot
             val2 = pow(_destPoint.x - pointFrom.x, 2) + pow((_destPoint.y - pointFrom.y), 2);
             DriveVal = floorSqrt((int)val2);
-            if (DriveVal < 2.5) {
+            if (DriveVal < 1.5) {
                 setMotorControlMode(&LeftMotor, Velocity, 0);
                 setMotorControlMode(&RightMotor, Velocity, 0);
                 setMotor_Vel(0, 0);
@@ -122,7 +122,7 @@ bool drive2Point(int val) {
             Dval = updateOutput(&DrivePID, (float) DriveVal);
             if (timerDone(&transTime)) {
                 // Get the heading from current location to the destination point in 0->360 that matches the scale everywhere else
-                heading = 270 - (int)(atan2((double) (_destPoint.x - pointFrom.x), (double) (_destPoint.y - pointFrom.y)) * RAD_TO_DEGREE + 180.0);
+                heading = 270 - (int)(atan2((double) (_destPoint.x - pointFrom.x), (double) (_destPoint.y - pointFrom.y)) * RAD_TO_DEGREE);
                 if (heading < 0) heading += 360;
 
                 int phi = abs(myHeading - (int) heading); // This is either the distance or 360 - distance
