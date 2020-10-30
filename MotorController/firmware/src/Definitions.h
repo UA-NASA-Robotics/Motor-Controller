@@ -10,10 +10,14 @@
 #include <xc.h>
 #include "CAN_Handler/GlobalCAN_IDs.h"
 
-#define LED1 LATEbits.LATE5
-#define LED2 LATEbits.LATE6
-#define LED3 LATEbits.LATE7
-#define LED4 LATGbits.LATG6
+#define LED0 LATEbits.LATE5
+#define LED1 LATEbits.LATE6
+#define LED2 LATEbits.LATE7
+#define LED3 LATGbits.LATG6
+#define LED7 LATEbits.LATE1
+#define LED6 LATEbits.LATE2
+#define LED5 LATEbits.LATE3
+#define LED4 LATEbits.LATE4
 
 #define RAD_TO_DEGREE   57.2957795
 

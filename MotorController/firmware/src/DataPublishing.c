@@ -34,7 +34,7 @@ bool publishData() {
     }
     if (validData) {
         sendDataCAN(GLOBAL_ADDRESS);
-        LED2 ^= 1;
+        LED1 ^= 1;
     }
     return validData;
 }

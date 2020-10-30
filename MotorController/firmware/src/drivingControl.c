@@ -210,10 +210,10 @@ bool driveSeperatDistances(int L_distance, int R_distance, int L_speed, int R_sp
                 requestMotorData(&RightMotor, ENCODER_POSITION_REQUESTED);
                 requestMotorData(&LeftMotor, POSITION_REACHED_REQUESTED);
                 requestMotorData(&RightMotor, POSITION_REACHED_REQUESTED);
+                LED0 ^= 1;
                 LED1 ^= 1;
                 LED2 ^= 1;
                 LED3 ^= 1;
-                LED4 ^= 1;
 
                 if (getMotorPosReached(&LeftMotor) && !leftReached) {
                     setMotorControlMode(&LeftMotor, Velocity, 0);
@@ -275,8 +275,8 @@ void driveDistanceVariedSpeed(int distance, int speed) {
     //set to drive a distance
     setMotorCounts(&LeftMotor, -distance * COUNTS_PER_CENTI);
     setMotorCounts(&RightMotor, distance * COUNTS_PER_CENTI);
+    LED0 = 0;
     LED1 = 0;
-    LED2 = 0;
 
     while ((!getMotorPosReached(&LeftMotor) || !getMotorPosReached(&RightMotor)) && continueMacro()) {
         requestMotorData(&LeftMotor, POSITION_REACHED_REQUESTED);
@@ -286,22 +286,22 @@ void driveDistanceVariedSpeed(int distance, int speed) {
         //LED1 ^=1;
         delay(50);
         //LED2 ^=1;
-        LED3 ^= 1;
+        LED2 ^= 1;
         delay(50);
-        LED4 ^= 1;
+        LED3 ^= 1;
         if (abs(LeftMotor.Position) > 90000 && !changedL) {
             long distance_remaining = -(distance * COUNTS_PER_CENTI) - LeftMotor.Position;
             setMotorControlMode(&LeftMotor, Velocity, speed / 2);
             setMotorControlMode(&LeftMotor, Position, speed / 2);
             setMotorCounts(&LeftMotor, distance_remaining);
             changedL = true;
-            LED1 = 1;
+            LED0 = 1;
         }
 
         if (abs(RightMotor.Position) > 1000 && !changedR) {
             setMotorVel(&RightMotor, 3000);
             changedR = true;
-            LED2 = 1;
+            LED1 = 1;
         }
 
         if (getMotorPosReached(&LeftMotor)) {

@@ -35,7 +35,7 @@ void testMotorDigitalOutput(void)
         setMotorDigitalOutput(&DrumMotor, 1, outputSet);   
         outputSet ^= 1;
         delay(1000);
-        LED1 ^= 1;        
+        LED0 ^= 1;        
     }
 }
 
@@ -46,17 +46,17 @@ void testArmMotorDigitalInputs(void)
         requestMotorData(&ArmMotor, DIGITAL_INPUT_REQUESTED);        
         delay(100);
         
-        if(getMotorDigitalInput(&ArmMotor,1))               LED1 = 1;
+        if(getMotorDigitalInput(&ArmMotor,1))               LED0 = 1;
+        else                                                LED0 = 0;
+        
+        if(getMotorDigitalInput(&ArmMotor,2))               LED1 = 1;
         else                                                LED1 = 0;
         
-        if(getMotorDigitalInput(&ArmMotor,2))               LED2 = 1;
+        if(getMotorDigitalInput(&ArmMotor,3))               LED2 = 1;
         else                                                LED2 = 0;
         
-        if(getMotorDigitalInput(&ArmMotor,3))               LED3 = 1;
-        else                                                LED3 = 0;
-        
-        if(getMotorDigitalInput(&ArmMotor,4))               LED4 = 1;
-        else                                                LED4 = 0;       
+        if(getMotorDigitalInput(&ArmMotor,4))               LED3 = 1;
+        else                                                LED3 = 0;       
     }   
 }
 
@@ -69,7 +69,7 @@ void testActuatorMotor(void)
         while(getMotorDigitalInput(&DrumMotor,ACTUATOR_DUMP_DIGITAL))
         {        
             requestMotorData(&DrumMotor, DIGITAL_INPUT_REQUESTED);     
-            LED1 ^= 1;   
+            LED0 ^= 1;   
             delay(100);
         }
         
@@ -78,7 +78,7 @@ void testActuatorMotor(void)
         while(getMotorDigitalInput(&DrumMotor,ACTUATOR_DIG_DIGITAL))
         {        
             requestMotorData(&DrumMotor, DIGITAL_INPUT_REQUESTED);     
-            LED1 ^= 2;   
+            LED0 ^= 2;   
             delay(100);
         }
         
@@ -93,7 +93,7 @@ void testBucketActuator(void)
     setMotorVel(&DrumMotor,200); 
     while(1)
     {
-        LED1 ^= 1;   
+        LED0 ^= 1;   
         delay(100);
         
     }

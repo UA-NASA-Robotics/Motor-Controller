@@ -42,15 +42,14 @@ void APP_Initialize(void) {
     setTimerInterval(&bootTimer, 3000);
     //while(1){LED1 ^=1;}
     while (!timerDone(&bootTimer)) {
+        LED0 ^= 1;
+        while (!timerDone(&ledTime));
         LED1 ^= 1;
         while (!timerDone(&ledTime));
         LED2 ^= 1;
         while (!timerDone(&ledTime));
         LED3 ^= 1;
         while (!timerDone(&ledTime));
-        LED4 ^= 1;
-        while (!timerDone(&ledTime));
-
     }
 
 
@@ -116,7 +115,7 @@ void APP_Tasks(void) {
         {
 
             publishData();
-            LED1 ^= 1;
+            LED0 ^= 1;
 
             appData.state = APP_STATE_RECEIVE_COMS;
             break;
@@ -132,9 +131,10 @@ void APP_Tasks(void) {
                     handleManualControl(getManualDriveSpeed(), getManualArmSpeed(), getManualBucketSpeed(), 0);
 
             }
+            printf("Hi!");
             appData.state = APP_STATE_AWAITING_RESPONSE;
             if (getCANFastData(FT_GLOBAL, getGBL_Data(POZYX,DATA_0)) > 0) {
-                LED1 ^= 1;
+                LED0 ^= 1;
             }
             break;
         }
