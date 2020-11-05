@@ -154,7 +154,7 @@
       <Template dnOrder="0">
         <Name dnOrder="0">sys_ports_static.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app/system_config/default/framework/system/ports/src</Path>
-        <Checksum dnOrder="2">F8DBE77C0155CE5AA8DE5AE2D2938075</Checksum>
+        <Checksum dnOrder="2">718801A1DE84C3A3A8085922E9D09ECF</Checksum>
       </Template>
       <Template dnOrder="1">
         <Name dnOrder="0">sys_devcon_cache.h</Name>

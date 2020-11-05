@@ -131,7 +131,7 @@ void APP_Tasks(void) {
                     handleManualControl(getManualDriveSpeed(), getManualArmSpeed(), getManualBucketSpeed(), 0);
 
             }
-            printf("Hi!");
+            printf("This is a longer message so I can see more stuff!\n");
             appData.state = APP_STATE_AWAITING_RESPONSE;
             if (getCANFastData(FT_GLOBAL, getGBL_Data(POZYX,DATA_0)) > 0) {
                 LED0 ^= 1;
