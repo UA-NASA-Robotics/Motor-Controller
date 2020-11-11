@@ -25,7 +25,9 @@ APP_DATA appData;
 timers_t sec, ms100, ms10;
 timers_t bootTimer, ledTime;
 bool isLoaded = false;
-int val;
+int val, test_jhs;
+
+
 
 void APP_Initialize(void) {
     /* Place the App state machine in its initial state. */
@@ -57,8 +59,14 @@ void APP_Initialize(void) {
     initCANFT();
     DRV_CAN0_Open();
 
-    initGlobalData(DEVICE_STATUS, getLoadedState, 1000);
-    initGlobalData(DEVICE_MACRO, getRunningMacros, 500);
+    // initGlobalData(DEVICE_STATUS, getLoadedState, 1000);
+    // initGlobalData(DEVICE_MACRO, getRunningMacros, 500);
+    
+    // TODO: remove test logic
+    //initGlobalData(DATA_0, 56, 500);
+    //TODO: next two lines for read
+    test_jhs = getCANFastData(FT_GLOBAL, getGBL_Data(MOTOR_CONTROLLER, DATA_0));
+    //printf("%d \n", test_jhs);
 
     initMotors();
     MotorsAllStop();
@@ -90,7 +98,6 @@ void APP_Initialize(void) {
 timers_t TestTimer;
 
 void APP_Tasks(void) {
-
     /* Check the application's current state. */
     switch (appData.state) {
             /* Application's initial state. */
@@ -131,7 +138,6 @@ void APP_Tasks(void) {
                     handleManualControl(getManualDriveSpeed(), getManualArmSpeed(), getManualBucketSpeed(), 0);
 
             }
-            printf("This is a longer message so I can see more stuff!\n");
             appData.state = APP_STATE_AWAITING_RESPONSE;
             if (getCANFastData(FT_GLOBAL, getGBL_Data(POZYX,DATA_0)) > 0) {
                 LED0 ^= 1;
