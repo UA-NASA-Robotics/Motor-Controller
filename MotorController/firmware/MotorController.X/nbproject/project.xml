@@ -21,6 +21,7 @@
                 <sourceRootElem>..\src\system_config\default</sourceRootElem>
                 <sourceRootElem>../../../../MasterControler/NaviController/firmware/src</sourceRootElem>
                 <sourceRootElem>../../../../Master-Controller/NaviController/firmware/src/Macro_Handler</sourceRootElem>
+                <sourceRootElem>../../../../../../microchip/harmony/v2_06</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>

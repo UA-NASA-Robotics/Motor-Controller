@@ -16,7 +16,7 @@
 /* ************************************************************************** */
 #include "CAN.h"
 //#include <proc/p32mz2048efh.h>
-#include "../../../../../framework/driver/can/drv_can.h"
+#include "../system_config/default/framework/driver/can/drv_can_static.h"
 #include "Definitions.h"
 #include "Timers.h"
 #include "CAN_Handler/CANFastTransfer.h"

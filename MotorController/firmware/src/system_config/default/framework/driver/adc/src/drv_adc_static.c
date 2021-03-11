@@ -73,6 +73,7 @@ void DRV_ADC_Initialize(void)
 
 
 
+
      /* Digital comparator setup */
     PLIB_ADCHS_DigitalComparatorSetup
           ( 

@@ -62,13 +62,13 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "system/common/sys_common.h"
 #include "app.h"
 #include "system_definitions.h"
-#include "Timers.h"
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: System Interrupt Vector Functions
 // *****************************************************************************
 // *****************************************************************************
-
+ 
 void __ISR(_UART2_TX_VECTOR, ipl5AUTO) _IntHandlerDrvUsartTransmitInstance0(void)
 {
     DRV_USART_TasksTransmit(sysObj.drvUsart0);
@@ -81,7 +81,7 @@ void __ISR(_UART2_FAULT_VECTOR, ipl5AUTO) _IntHandlerDrvUsartErrorInstance0(void
 {
     DRV_USART_TasksError(sysObj.drvUsart0);
 }
-
+ 
  
 
  
@@ -89,29 +89,49 @@ void __ISR(_UART4_TX_VECTOR, ipl5AUTO) _IntHandlerDrvUsartTransmitInstance1(void
 {
     DRV_USART_TasksTransmit(sysObj.drvUsart1);
 }
-
-void __ISR(_UART4_RX_VECTOR, ipl5AUTO) _IntHandlerDrvUsartReceiveInstance1(void) {
+void __ISR(_UART4_RX_VECTOR, ipl5AUTO) _IntHandlerDrvUsartReceiveInstance1(void)
+{
     DRV_USART_TasksReceive(sysObj.drvUsart1);
 }
-
-void __ISR(_UART4_FAULT_VECTOR, ipl5AUTO) _IntHandlerDrvUsartErrorInstance1(void) {
+void __ISR(_UART4_FAULT_VECTOR, ipl5AUTO) _IntHandlerDrvUsartErrorInstance1(void)
+{
     DRV_USART_TasksError(sysObj.drvUsart1);
 }
+ 
+ 
 
+ 
 
+ 
 
+ 
 
-
-
-
-
-void __ISR(_TIMER_1_VECTOR, ipl6AUTO) IntHandlerDrvTmrInstance0(void) {
-    globalTimerTracker();
-    PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_TIMER_1);
+ 
+    void __ISR(_CHANGE_NOTICE_B_VECTOR, ipl1AUTO) _IntHandlerChangeNotification_PortB(void)
+{
+    
+    PLIB_INT_SourceFlagClear(INT_ID_0,INT_SOURCE_CHANGE_NOTICE_B);
+}
+   void __ISR(_CHANGE_NOTICE_E_VECTOR, ipl1AUTO) _IntHandlerChangeNotification_PortE(void)
+{
+    
+    PLIB_INT_SourceFlagClear(INT_ID_0,INT_SOURCE_CHANGE_NOTICE_E);
+}
+   void __ISR(_CHANGE_NOTICE_F_VECTOR, ipl1AUTO) _IntHandlerChangeNotification_PortF(void)
+{
+    
+    PLIB_INT_SourceFlagClear(INT_ID_0,INT_SOURCE_CHANGE_NOTICE_F);
 }
 
-void __ISR(_CAN1_VECTOR, IPL5AUTO) _IntHandlerDrvCANInstance0(void) {
-    CAN_ISR_CALLBACK();
+ 
+
+void __ISR(_TIMER_1_VECTOR, ipl6AUTO) IntHandlerDrvTmrInstance0(void)
+{
+    PLIB_INT_SourceFlagClear(INT_ID_0,INT_SOURCE_TIMER_1);
+}
+ 
+void __ISR(_CAN1_VECTOR, IPL5AUTO) _IntHandlerDrvCANInstance0(void)
+{
     PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_CAN_1);
 }
 
@@ -119,4 +139,4 @@ void __ISR(_CAN1_VECTOR, IPL5AUTO) _IntHandlerDrvCANInstance0(void) {
 
 /*******************************************************************************
  End of File
- */
+*/
