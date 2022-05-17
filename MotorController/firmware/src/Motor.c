@@ -36,10 +36,19 @@ void initMotors() {
     setMotorControlMode(&ArmMotor, Current, 0);
     setMotorVel(&ArmMotor, 0);
     setMotorCurrent(&ArmMotor, 0);
-
-
     //setMotorCurrent(&ArmMotor, 2500);
-#endif /*DISABLE_LEFT_MOTOR*/
+
+
+    InitMotor(&SecondaryArmMotor, SECONDARY_ARM_MOTOR_ID, SECONDARY_ARM_MOTOR_STATUS, SECONDARY_ARM_MOTOR_MOB, MAXRPM, MAXCURRENTARM, (LimitSwitch_t) {
+        LIM_D0H, LIM_D1H
+    }, false);
+    setMotorControlMode(&SecondaryArmMotor, Current, 0);
+    setMotorVel(&SecondaryArmMotor, 0);
+    setMotorCurrent(&SecondaryArmMotor, 0);
+    //setMotorCurrent(&SecondaryArmMotor, 2500);
+    
+#endif /*DISABLE_ARM_MOTOR*/
+
 
 #ifndef DISABLE_BUCKET_MOTOR
 
@@ -77,6 +86,9 @@ void MotorsAllStop() {
 #ifndef DISABLE_ARM_MOTOR
     setMotorVel(&ArmMotor, 0);
     setMotorCurrent(&ArmMotor, 0);
+    
+    setMotorVel(&SecondaryArmMotor, 0);
+    setMotorCurrent(&SecondaryArmMotor, 0);
     //setMotorVel(&ArmMotor, 0);
 #endif
 
@@ -137,9 +149,14 @@ void handleManualControl(int16_t _driveMotorSpeed, int16_t _speed1, int16_t _spe
         if (abs(_speed1) > 6) {
             setMotorVel(&ArmMotor, _speed1);
             setMotorCurrent(&ArmMotor, 30*_speed1);
+            setMotorVel(&SecondaryArmMotor, _speed1);
+            setMotorCurrent(&SecondaryArmMotor, 30*_speed1);
+            
         } else {
             setMotorVel(&ArmMotor, 0);
             setMotorCurrent(&ArmMotor, 0);
+            setMotorVel(&SecondaryArmMotor, 0);
+            setMotorCurrent(&SecondaryArmMotor, 0);
 
         }
         setMotorVel(&DrumMotor, ((signed char) _speed2)*40);

@@ -80,7 +80,7 @@ typedef struct {
    '.          .'
      '-......-'
  * */
-Motor_t RightMotor, LeftMotor, DrumMotor, ArmMotor, PlowMotor;
+Motor_t RightMotor, LeftMotor, DrumMotor, ArmMotor, SecondaryArmMotor, PlowMotor;
 
 //#define DISABLE_MOTOR_SYSTEMS
 //#define DISABLE_LEFT_MOTOR
@@ -106,6 +106,7 @@ Motor_t RightMotor, LeftMotor, DrumMotor, ArmMotor, PlowMotor;
 #define  LEFTMOTOR_STATUS			7
 #define  RIGHTMOTOR_STATUS			6
 #define  ARMMOTOR_STATUS			5
+#define  SECONDARY_ARM_MOTOR_STATUS 2
 #define  BUCKETMOTOR_STATUS			4
 #define  PLOWMOTOR_STATUS			3
 
@@ -116,6 +117,10 @@ Motor_t RightMotor, LeftMotor, DrumMotor, ArmMotor, PlowMotor;
 #define ARMMOTORID 0x7C
 #define ARMMOTOR_MOB 3
 #define MAXCURRENTARM 5000	//this isn't the bg65 but the 75 and the current rating should be reviewed 
+
+#define SECONDARY_ARM_MOTOR_ID      0x7A
+#define SECONDARY_ARM_MOTOR_MOB     5
+
 
 #define ARM_DUMP_DIGITAL  1
 #define ARM_DIG_DIGITAL   3

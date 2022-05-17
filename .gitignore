@@ -15,3 +15,5 @@ bin/framework/peripheral/**/*.a
 doc/html/**/*
 asset.cache
 *.DS_Store
+/MotorController/firmware/MotorController.X/build/
+/MotorController/firmware/MotorController.X/dist/
